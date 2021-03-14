@@ -30,11 +30,11 @@ void setup() {
   surface.setTitle("TMTimeTable");
   surface.setResizable(true);
   wedDates = loadStrings("Wed1.txt");
-  pref = loadStrings("data/pref.txt");
-  if (pref.length != 0) {
-    isSetUp = true;
+  try {
+    pref = loadStrings("data/pref.txt");
     loadData();
-  } else {
+  }
+  catch (Exception e) {
     prepareFirstTime();
   }
   size(1280, 720);

@@ -14,7 +14,7 @@ String otherDay;
 float transSpeed = 2.5;
 char cohort, currentCohort;
 
-boolean isSetUp, customTheme, checkOtherDay = false, reset = false, warningShown = false, showVer = false;
+boolean isSetUp = true, customTheme, checkOtherDay = false, reset = false, warningShown = false, showVer = false;
 float alpha = 0;
 
 String ver = "3.2.1";
