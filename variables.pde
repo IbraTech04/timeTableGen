@@ -17,7 +17,7 @@ char cohort, currentCohort;
 boolean isSetUp = true, customTheme, checkOtherDay = false, reset = false, warningShown = false, showVer = false;
 float alpha = 0;
 
-String ver = "3.2.1";
+String ver = "3.2.2";
 int verCounter = 0;
 
 int frame1, frame2;

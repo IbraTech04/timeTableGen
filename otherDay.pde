@@ -11,9 +11,9 @@ void parseDate(String lineIn) {
       dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
       c.set(Calendar.MONTH, month()-1);
       String dayOfWeek = week[c.get(Calendar.DAY_OF_WEEK)];
-      String month = months[c.get(Calendar.MONTH) + 1];
+      String month = months[c.get(Calendar.MONTH)];
       calculateClassesOther(dayOfWeek, month);
-      noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH));
+      noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1);
       otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
     } else if (lineIn.equals("TODAY")) {
       screenNumber = 0;
@@ -30,7 +30,7 @@ void parseDate(String lineIn) {
       String dayOfWeek = week[c.get(Calendar.DAY_OF_WEEK)];
       String month = months[c.get(Calendar.MONTH) + 1];
       calculateClassesOther(dayOfWeek, month);
-      noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH));
+      noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1);
       otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
     }
   }
@@ -147,10 +147,11 @@ boolean noSchoolOther(String weekDay, int day, int month) {
   }
 }
 boolean paDayOther(int day, int month) {
-  int[] months = {2, 4, 4, 4, 4, 5};
-  int[] days = {15, 2, 5, 26, 27, 24};
+  int[] months = {2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5};
+  int[] days = {15, 2, 5, 12, 13, 14, 15, 16, 26, 27, 24};
   for (int i = 0; i < days.length; i++) { 
     if (day == days[i] && month == months[i]) {
+      println(day,month);
       return true;
     }
   }
