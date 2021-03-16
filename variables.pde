@@ -20,6 +20,4 @@ float alpha = 0;
 String ver = "3.2.2";
 int verCounter = 0;
 
-int frame1, frame2;
-
 int guiState = 0;

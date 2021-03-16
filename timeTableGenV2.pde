@@ -12,7 +12,6 @@ int col;
 boolean isConfirmed;
 Calendar cal = Calendar.getInstance(); //Get calendar date
 UiBooster booster;
-
 void setup() {
   SmoothCanvas sc = (SmoothCanvas) getSurface().getNative();
   JFrame jf = (JFrame) sc.getFrame();
@@ -39,6 +38,28 @@ void setup() {
   }
   size(1280, 720);
   calculateClasses();
+  PrintWriter output=null;
+  String[] nversionFromServer = loadStrings("https://raw.githubusercontent.com/IbraTech04/updateServer/master/Vers.txt");
+  if (!nversionFromServer[0].equals(ver)) {
+    booster.showConfirmDialog(
+      "A new update (V" + nversionFromServer[0] + ") Would you like to update now?", 
+      "Update!", 
+      new Runnable() {
+      public void run() {
+        isConfirmed = true;
+      }
+    }
+    , 
+      new Runnable() {
+      public void run() {
+        isConfirmed = false;
+      }
+    }
+    );        
+    if (isConfirmed) {
+      link("https://github.com/IbraTech04/timeTableGen/releases");
+    }
+  }
 }
 
 void draw() {

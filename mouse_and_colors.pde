@@ -180,8 +180,6 @@ void mousePressed() {
   if (mouseY >= height -  height*0.102986612 && mouseX <=height*0.102986612) {
     if (screenNumber == 0) {
       screenNumber = 1;
-      frame1 = 0;
-      frame2 = 0;
     } else {
       screenNumber = 0;
     }
