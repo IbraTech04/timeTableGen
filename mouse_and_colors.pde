@@ -3,7 +3,6 @@ int[] newColors = {0, 0, 0};
 int[] newText = new int[3];
 int ishift = 0;
 void mousePressed() { 
-
   if (screenNumber == 1) {
     if (mouseX >= them[0] && mouseX <= them[1] && mouseY >= them[2] && mouseY <= them[3]) {
       verCounter = 0;
@@ -189,6 +188,12 @@ void mousePressed() {
       screenNumber = 3;
       parseDate(otherDay);
     }
+  } else if (mouseY >= height -  height*0.102986612 && mouseX <= width/2 + height*0.102986612/2 && mouseX >= width/2 - height*0.102986612/2) {
+    /*if (view == 0) {
+      view = 1;
+    } else {
+      view = 0;
+    }*/
   }
 }
 float sizeDetecW(float input, float divisor) {

@@ -7,69 +7,87 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 
 int col;
 boolean isConfirmed;
 Calendar cal = Calendar.getInstance(); //Get calendar date
 UiBooster booster;
+void settings() {
+  size(1280, 720);
+}
 void setup() {
-  SmoothCanvas sc = (SmoothCanvas) getSurface().getNative();
-  JFrame jf = (JFrame) sc.getFrame();
-  Dimension d = new Dimension(720, 720);
-  jf.setMinimumSize(d);
-  getSurface().setResizable(true);
+  File theDir = new File(System.getProperty("user.home") + "\\TMTimeTable");
+  if (!theDir.exists()) {
+    theDir.mkdirs();
+  }
   background(0);
   booster = new UiBooster();
   homep = loadImage("HomeL.png");
   settingsp = loadImage("SettingsL.png");
   calendar = loadImage("calL.png");
+  weekV = loadImage("weekL.png");
+
   smooth();
   noStroke();
-  font = createFont("Product Sans Bold.ttf", 100); //Load the font
+  font = createFont("ProductSans-Bold.ttf", 100); //Load the font
   surface.setTitle("TMTimeTable");
   surface.setResizable(true);
   wedDates = loadStrings("Wed1.txt");
   try {
-    pref = loadStrings("data/pref.txt");
+    pref = loadStrings(System.getProperty("user.home")+"\\TMTimeTable\\pref.txt");
     loadData();
   }
   catch (Exception e) {
     prepareFirstTime();
   }
-  size(1280, 720);
   calculateClasses();
-  checkForUpdates();
+  try {
+    checkForUpdates();
+  }
+  catch (Exception e) {
+  }
 }
 
 void draw() {
-  colorShift(newColors[0], newColors[1], newColors[2]);
-  colorShiftBG(newBG[0], newBG[1], newBG[2]);
-  colorShiftText(newText[0], newText[1], newText[2]);
-  colorShiftImg(colToBe);
-  calculateClasses();
-  tint(picCol, alpha);
-
-  sizeDeteccLegacy();
-
-  if (isSetUp) {
-    if (screenNumber == 0) {
-      if (alpha <= 255) {
-        alpha+=17;
-      }
-      mainScreen();
-    } else if (screenNumber == 1) {
-      if (reset) {
-        alpha-=17;
-        if (alpha < 0) {
-          reset();
-        }
-      }      
-      guiSettings();
-    } else {
-      checkOtherTime();
-    }
+  if (updateMode) {
+    update();
   } else {
-    firstTimeSetup();
+    colorShift(newColors[0], newColors[1], newColors[2]);
+    colorShiftBG(newBG[0], newBG[1], newBG[2]);
+    colorShiftText(newText[0], newText[1], newText[2]);
+    colorShiftImg(colToBe);
+    calculateClasses();
+    tint(picCol, alpha);
+
+    sizeDeteccLegacy();
+
+    if (isSetUp) {
+      if (screenNumber == 0) {
+        if (alpha <= 255) {
+          alpha+=17;
+        }
+        if (view == 0) {
+          mainScreen();
+        } else {
+          weekView();
+        }
+      } else if (screenNumber == 1) {
+        if (reset) {
+          alpha-=17;
+          if (alpha < 0) {
+            reset();
+          }
+        }      
+        guiSettings();
+      } else {
+        checkOtherTime();
+      }
+    } else {
+      firstTimeSetup();
+    }
   }
 }
 
@@ -88,11 +106,34 @@ void mainScreen() {
   text(calDate + " (Day " + period + ")", width/2, height/2-130);
 
   drawTimes();
-  textFont(font, 15);
-  text("TechMaster Industries is NOT to be held responsible for incorrect timings \n While our programs go through a lot of testing, it is still possible for things to slip through the cracks", width/2, height-30);
+
   imageMode(CENTER);
   image(settingsp, height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
   image(calendar, width - height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
+  //image(weekV, width/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
+}
+
+void weekView() {
+  background(backGroundColor[0], backGroundColor[1], backGroundColor[2], alpha);
+  fill(colors[0], colors[1], colors[2], alpha);
+  rect(0, height -  height*0.102986612, width, height); //These two are the two rectangles on the top and bottom
+  rect(0, 0, width, height*0.102986612);
+  textAlign(CENTER);
+  fill(textColor[0], textColor[1], textColor[2], alpha);
+  textFont(font, 50); //Setting Text Font
+  text("TMTimeTable Home", width/2, height*0.0494444444 + 25); //Top Text
+  pushMatrix();
+  translate(0, height*0.102986612);
+  translate(0, height*0.122070312);
+  for (int i = 0; i < 5; i++) {
+    drawRect();
+    translate(0, 100);
+  }
+  popMatrix();
+  imageMode(CENTER);
+  image(settingsp, height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
+  image(calendar, width - height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
+  //image(weekV, width/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
 }
 
 void guiSettings() {
@@ -504,7 +545,7 @@ void loadData() {
 }
 
 void writeData() {
-  output = createWriter("data/pref.txt");
+  output = createWriter(System.getProperty("user.home")+"\\TMTimeTable\\pref.txt");
   output.println("Cohort:" + cohort);
   output.println("P1:" + p1Class);
   output.println("P2:" + p2Class);

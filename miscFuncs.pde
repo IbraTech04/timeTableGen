@@ -20,13 +20,13 @@ void prepareFirstTime() {
   newColors[2] = 245;
   Theme = "Dark";
   cScheme = "Blue";
-  output = createWriter("data/pref.txt");
+  output = createWriter(System.getProperty("user.home")+"\\TMTimeTable\\pref.txt");
 }
 
 void reset() {
   reset = false;
   isSetUp = false;
-  output = createWriter("data/pref.txt");
+  output = createWriter(System.getProperty("user.home")+"\\TMTimeTable\\pref.txt");
   colors[0] = 66;
   colors[1] = 135;
   colors[2] = 245;
@@ -42,4 +42,8 @@ void reset() {
   alpha = 0;
   screenNumber = 0;
   setup();
+}
+
+void drawRect() {
+  rect(10, 10, width-20, 90, 10, 10, 10, 10);
 }

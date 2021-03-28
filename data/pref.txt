@@ -1,6 +1,0 @@
-Cohort:A
-P1:Robotics
-P2:English
-Theme:Dark
-Color Scheme:Blue
-Animation Speed:2.5
