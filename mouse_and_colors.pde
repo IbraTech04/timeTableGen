@@ -144,6 +144,7 @@ void mousePressed() {
         p1Class = backup;
       }
       writeData();
+      initWeekView();
     } else if (mouseX >= sizeDetecW(402, width) && mouseX <= sizeDetecW(881, width) && mouseY >= sizeDetecH(321, height) && mouseY <= sizeDetecH(358, height)) {
       verCounter = 0;
       String backup = p2Class;
@@ -152,6 +153,7 @@ void mousePressed() {
         p2Class = backup;
       }
       writeData();
+      initWeekView();
     } else if (mouseX >= sizeDetecW(428, width) && mouseX <= sizeDetecW(863, width) && mouseY >= sizeDetecH(376, height) && mouseY <= sizeDetecH(414, height)) {
       verCounter = 0;
       if (cohort == 'A') {
@@ -162,6 +164,7 @@ void mousePressed() {
         cohort = 'A';
       }
       writeData();
+      initWeekView();
     } else if (mouseX >= sizeDetecW(395, width) && mouseX <= sizeDetecW(897, width) && mouseY >= sizeDetecH(419, height) && mouseY <= sizeDetecH(462, height)) {
       verCounter = 0;
       if (transSpeed == 1) {
@@ -180,6 +183,7 @@ void mousePressed() {
     if (screenNumber == 0) {
       screenNumber = 1;
     } else {
+      guiTrans = -50;
       screenNumber = 0;
     }
   } else if (mouseY >= height -  height*0.102986612 && mouseX >=width - height*0.102986612) {

@@ -13,11 +13,15 @@ import java.io.IOException;
 
 int col;
 boolean isConfirmed;
+
+ArrayList<WeekRect> rects = new ArrayList<WeekRect>();
 Calendar cal = Calendar.getInstance(); //Get calendar date
+Calendar viewWeek = Calendar.getInstance(); //Get calendar date
 UiBooster booster;
 void settings() {
   size(1280, 720);
 }
+
 void setup() {
   File theDir = new File(System.getProperty("user.home") + "\\TMTimeTable");
   if (!theDir.exists()) {
@@ -49,6 +53,7 @@ void setup() {
   }
   catch (Exception e) {
   }
+  initWeekView();
 }
 
 void draw() {
@@ -113,28 +118,7 @@ void mainScreen() {
   //image(weekV, width/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
 }
 
-void weekView() {
-  background(backGroundColor[0], backGroundColor[1], backGroundColor[2], alpha);
-  fill(colors[0], colors[1], colors[2], alpha);
-  rect(0, height -  height*0.102986612, width, height); //These two are the two rectangles on the top and bottom
-  rect(0, 0, width, height*0.102986612);
-  textAlign(CENTER);
-  fill(textColor[0], textColor[1], textColor[2], alpha);
-  textFont(font, 50); //Setting Text Font
-  text("TMTimeTable Home", width/2, height*0.0494444444 + 25); //Top Text
-  pushMatrix();
-  translate(0, height*0.102986612);
-  translate(0, height*0.122070312);
-  for (int i = 0; i < 5; i++) {
-    drawRect();
-    translate(0, 100);
-  }
-  popMatrix();
-  imageMode(CENTER);
-  image(settingsp, height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
-  image(calendar, width - height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
-  //image(weekV, width/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
-}
+
 
 void guiSettings() {
   background(backGroundColor[0], backGroundColor[1], backGroundColor[2]);
@@ -153,7 +137,19 @@ void guiSettings() {
   textAlign(LEFT);
   textFont(font, 50);
   textAlign(CENTER);
-
+  if (guiTrans < 0) {
+    if (guiTrans % 7 == 0) {
+      guiTrans += 7;
+    } else if (guiTrans % 5 == 0) {
+      guiTrans += 5;
+    } else if (guiTrans % 4 == 0) {
+      guiTrans += 4;
+    } else if (guiTrans % 3 == 0) {
+      guiTrans += 3;
+    } else {
+      guiTrans++;
+    }
+  }
   text("Theme: " + Theme, width/2, themPos[0]);
   if (Theme.equals("Really Dark")) {
     text("Color Scheme: Really Dark", width/2, clrPos[0]);

@@ -24,7 +24,7 @@ int verCounter = 0;
 
 int guiState = 0, updateState = 0;
 
-int lang = 0, view = 0;
+int lang = 0, view = 0, guiTrans = -70;
 
 String[] titleText = {"TimeTableGen Home"};
 String[] settingsText = {"TimeTableGen Settings"};
@@ -34,3 +34,7 @@ String[] mainText = {""};
 String[] disc = {""};
 String[] theme = {""};
 String[] colorText = {""};
+
+int daysLeft = 100;
+
+float transScale;

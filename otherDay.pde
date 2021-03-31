@@ -9,9 +9,8 @@ void parseDate(String lineIn) {
       Calendar c = Calendar.getInstance();
       c.set(Calendar.DAY_OF_MONTH, day()+1);
       dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-      c.set(Calendar.MONTH, month()-1);
       String dayOfWeek = week[c.get(Calendar.DAY_OF_WEEK)];
-      String month = months[c.get(Calendar.MONTH)];
+      String month = months[c.get(Calendar.MONTH)+1];
       calculateClassesOther(dayOfWeek, month);
       noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1);
       otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
@@ -151,7 +150,6 @@ boolean paDayOther(int day, int month) {
   int[] days = {15, 2, 5, 12, 13, 14, 15, 16, 26, 27, 24};
   for (int i = 0; i < days.length; i++) { 
     if (day == days[i] && month == months[i]) {
-      println(day,month);
       return true;
     }
   }
