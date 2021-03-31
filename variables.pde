@@ -19,7 +19,7 @@ char cohort, currentCohort;
 boolean isSetUp = true, customTheme, checkOtherDay = false, reset = false, warningShown = false, showVer = false, updateMode = false, updateMode2 = false;
 float alpha = 0;
 
-String ver = "3.2.4";
+String ver = "3.2.5";
 int verCounter = 0;
 
 int guiState = 0, updateState = 0;
