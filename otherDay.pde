@@ -3,39 +3,60 @@ char currentCohortOther;
 boolean noSchoolOther;
 String otherCalDate;
 void parseDate(String lineIn) {
-  try {
-    lineIn = lineIn.toUpperCase();
-    if (lineIn.equals("TOMORROW")) {
-      Calendar c = Calendar.getInstance();
-      c.set(Calendar.DAY_OF_MONTH, day()+1);
-      dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-      String dayOfWeek = week[c.get(Calendar.DAY_OF_WEEK)];
-      String month = months[c.get(Calendar.MONTH)+1];
-      calculateClassesOther(dayOfWeek, month);
-      noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1);
-      otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
-    } else if (lineIn.equals("TODAY")) {
-      screenNumber = 0;
-    } else if (lineIn.equals("WEDNESDAY") || lineIn.equals("WED")) {
-      checkWedOther(preCheckWed(false));
-    } else if (lineIn.equals("NEXT WEDNESDAY") || lineIn.equals("NEXT WED")) {
-      checkWedOther(preCheckWed(true));
-    } else {
-      String[] split = split(lineIn, '/');
-      Calendar c = Calendar.getInstance();
-      c.set(Calendar.DAY_OF_MONTH, int(split[1]));
-      c.set(Calendar.MONTH, int(split[0]) - 1);
-      dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-      String dayOfWeek = week[c.get(Calendar.DAY_OF_WEEK)];
-      String month = months[c.get(Calendar.MONTH) + 1];
-      calculateClassesOther(dayOfWeek, month);
-      noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1);
-      otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
+  if (view == 0) {
+    try {
+      lineIn = lineIn.toUpperCase();
+      if (lineIn.equals("TOMORROW")) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.DAY_OF_MONTH, day()+1);
+        dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        String dayOfWeek = testWeek[0][c.get(Calendar.DAY_OF_WEEK)];
+        String month = testMonth[0][c.get(Calendar.MONTH)+1];
+        calculateClassesOther(dayOfWeek, month);
+        noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1);
+
+        dayOfWeek = testWeek[lang][c.get(Calendar.DAY_OF_WEEK)];
+        month = testMonth[lang][c.get(Calendar.MONTH)+1];
+        if (lang == 0) {
+          otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
+        } else if (lang == 1) {
+          otherCalDate = dayOfWeek + " " + c.get(Calendar.DAY_OF_MONTH) + " " + month + " 2021";
+        }
+      } else if (lineIn.equals("TODAY")) {
+        screenNumber = 0;
+      } else if (lineIn.equals("WEDNESDAY") || lineIn.equals("WED")) {
+        checkWedOther(preCheckWed(false));
+      } else if (lineIn.equals("NEXT WEDNESDAY") || lineIn.equals("NEXT WED")) {
+        checkWedOther(preCheckWed(true));
+      } else {
+        String[] split = split(lineIn, '/');
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.DAY_OF_MONTH, int(split[1]));
+        c.set(Calendar.MONTH, int(split[0]) - 1);
+        dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+        String dayOfWeek = week[c.get(Calendar.DAY_OF_WEEK)];
+        String month = months[c.get(Calendar.MONTH) + 1];
+        calculateClassesOther(dayOfWeek, month);
+        noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH));
+        dayOfWeek = testWeek[lang][c.get(Calendar.DAY_OF_WEEK)];
+        month = testMonth[lang][c.get(Calendar.MONTH) + 1];
+        if (lang == 0) {
+          otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
+        } else if (lang == 1) {
+          otherCalDate = dayOfWeek + " " + c.get(Calendar.DAY_OF_MONTH) + " " + month + " 2021";
+        }
+      }
     }
+    catch (Exception e) {
+      booster.showErrorDialog("Invalid Date Entered. Please Try again", "Error");
+      screenNumber = 0;
+    }
+    println("here");
   }
-  catch (Exception e) {
-    booster.showErrorDialog("Invalid Date Entered. Please Try again", "Error");
-    screenNumber = 0;
+  else if (view == 1){
+     Calendar toView = Calendar.getInstance();
+     int day = toView.get(Calendar.DAY_OF_YEAR);
+     toSubtract += (-91.8651685*day)-(height*0.333333333) + height-720;
   }
 }
 void calculateClassesOther(String day, String month) {
@@ -94,51 +115,52 @@ void drawTimesOther() {
     text("No School today. Reason: " + reason, width/2, height/2-105); //Drawing   times
   } else {
     if (currentCohortOther == 'A' && periodOther == 1 && cohort == 'A') {
-      text("P1: " + p1Class + " In Class", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p1Class + inSchool[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohortOther == 'B' && periodOther == 1 && cohort == 'A') {
-      text("P1: " + p1Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohortOther == 'A' && periodOther == 2 && cohort == 'A') {
-      text("P1: " + p2Class + " In Class", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p2Class + inSchool[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohortOther == 'B' && periodOther == 2 && cohort == 'A') {
-      text("P1: " + p2Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohortOther == 'A' && periodOther == 1 && cohort == 'B') {
-      text("P1: " + p1Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohortOther == 'B' && periodOther == 1 && cohort == 'B') {
-      text("P1: " + p1Class + " In Class", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p1Class + inSchool[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohortOther == 'A' && periodOther == 2 && cohort == 'B') {
-      text("P1: " + p2Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohortOther == 'B' && periodOther == 2 && cohort == 'B') {
-      text("P1: " + p2Class + " In Class", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p2Class + inSchool[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     } else   if (currentCohortOther == 'A' && periodOther == 1 && cohort == 'C') {
-      text("P1: " + p1Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohortOther == 'B' && periodOther == 1 && cohort == 'C') {
-      text("P1: " + p1Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohortOther == 'A' && periodOther == 2 && cohort == 'C') {
-      text("P1: " + p2Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohortOther == 'B' && periodOther == 2 && cohort == 'C') {
-      text("P1: " + p2Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At home", width/2, height/2-52);
+      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     }
   }
   popMatrix();
 }
 
 boolean noSchoolOther(String weekDay, int day, int month) {
+
   if (weekDay == "Saturday" || weekDay == "Sunday") {
     reason = "Weekend";
     return true;
-  } else if (paDayOther(day, month)) {
+  } else if (paDayOther(day, month+1)) {
     reason = "PA Day";
     return true;
   } else {
@@ -146,10 +168,11 @@ boolean noSchoolOther(String weekDay, int day, int month) {
   }
 }
 boolean paDayOther(int day, int month) {
-  int[] months = {2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5};
-  int[] days = {15, 2, 5, 12, 13, 14, 15, 16, 26, 27, 24};
+  int[] months = {2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 6};
+  int[] days = {15, 2, 5, 12, 13, 14, 15, 16, 26, 27, 24, 28, 29};
   for (int i = 0; i < days.length; i++) { 
     if (day == days[i] && month == months[i]) {
+
       return true;
     }
   }
@@ -166,7 +189,6 @@ String preCheckWed(boolean next) {
 
   wed.set(Calendar.DAY_OF_MONTH, day());
   wed.set(Calendar.MONTH, month()-1);
-
   if ((wed.get(Calendar.DAY_OF_WEEK)) == 1) {
     changeFactor += 3;
   } else if ((wed.get(Calendar.DAY_OF_WEEK)) == 2) {
@@ -179,7 +201,7 @@ String preCheckWed(boolean next) {
     changeFactor += 6;
   } else if ((wed.get(Calendar.DAY_OF_WEEK)) == 6) {
     changeFactor += 5;
-  } else if ((wed.get(Calendar.DAY_OF_WEEK)) == 0) {
+  } else if ((wed.get(Calendar.DAY_OF_WEEK)) == 7) {
     changeFactor += 4;
   }
 

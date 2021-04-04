@@ -10,11 +10,14 @@ import java.util.List;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 int col;
 boolean isConfirmed;
 
 ArrayList<WeekRect> rects = new ArrayList<WeekRect>();
+ArrayList<ClickableText> settings = new ArrayList<ClickableText>();
+
 Calendar cal = Calendar.getInstance(); //Get calendar date
 Calendar viewWeek = Calendar.getInstance(); //Get calendar date
 UiBooster booster;
@@ -40,6 +43,8 @@ void setup() {
   surface.setTitle("TMTimeTable");
   surface.setResizable(true);
   wedDates = loadStrings("Wed1.txt");
+  monthString = months[month()] + year();
+  dayOfWeek = week[date];
   try {
     pref = loadStrings(System.getProperty("user.home")+"\\TMTimeTable\\pref.txt");
     loadData();
@@ -54,6 +59,16 @@ void setup() {
   catch (Exception e) {
   }
   initWeekView();
+  for (int i = 0; i < 6; i ++) {
+    settings.add(new ClickableText());
+    settings.get(i).setMode("CENTER");
+  }
+  settings.get(0).setText("Theme: " + Theme);
+  settings.get(1).setText("Color Scheme: " + cScheme);
+  settings.get(2).setText("Change Course One: " + p1Class);
+  settings.get(3).setText("Change Course Two: " + p2Class);
+  settings.get(4).setText("Change Cohort: " + cohort);
+  settings.get(5).setText("Animation Speed: " + aniSpeed);
 }
 
 void draw() {
@@ -104,10 +119,14 @@ void mainScreen() {
   textAlign(CENTER);
   fill(textColor[0], textColor[1], textColor[2], alpha);
   textFont(font, 50); //Setting Text Font
-  text("TMTimeTable Home", width/2, height*0.0494444444 + 25); //Top Text
-  text("Your Schedule for today:", width/2, height/2-200);
+  text(titleText[lang], width/2, height*0.0494444444 + 25); //Top Text
+  text(schedToday[lang], width/2, height/2-200);
   textFont(font, 45); //Setting Text Font
-
+  if (lang == 0) {
+    calDate = testWeek[lang][date] + " " + testMonth[lang][month()] + " " + day() + " " + year();
+  } else if (lang == 1) {
+    calDate = testWeek[lang][date] + " " + day() + " " + testMonth[lang][month()] + " " + year();
+  }
   text(calDate + " (Day " + period + ")", width/2, height/2-130);
 
   drawTimes();
@@ -131,25 +150,13 @@ void guiSettings() {
   textFont(font, 50);
   textAlign(CENTER);
 
-  text("TMTimeTable Settings", width/2, height*0.0494444444 + 25); //Top Text
+  text(settingsText[lang], width/2, height*0.0494444444 + 25); //Top Text
 
   textFont(font, 25);
   textAlign(LEFT);
   textFont(font, 50);
   textAlign(CENTER);
-  if (guiTrans < 0) {
-    if (guiTrans % 7 == 0) {
-      guiTrans += 7;
-    } else if (guiTrans % 5 == 0) {
-      guiTrans += 5;
-    } else if (guiTrans % 4 == 0) {
-      guiTrans += 4;
-    } else if (guiTrans % 3 == 0) {
-      guiTrans += 3;
-    } else {
-      guiTrans++;
-    }
-  }
+
   text("Theme: " + Theme, width/2, themPos[0]);
   if (Theme.equals("Really Dark")) {
     text("Color Scheme: Really Dark", width/2, clrPos[0]);
@@ -168,7 +175,7 @@ void guiSettings() {
   fill(128, 128, 128, alpha);
 
   textFont(font, 20);
-  text("Press F to perform a Factory Reset", width/2+35, height-110);
+  text(resetString[lang], width/2+35, height-110);
   popMatrix();
 
   image(homep, height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
@@ -189,8 +196,8 @@ void checkOtherTime() {
   image(calendar, width - height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
   fill(textColor[0], textColor[1], textColor[2], alpha);
   textFont(font, 50); //Setting Text Font
-  text("TMTimeTable Custom Date Entry", width/2, height*0.0494444444 + 25); //Top Text
-  text("Your Schedule for entered date:", width/2, height/2-200);
+  text(dateText[lang], width/2, height*0.0494444444 + 25); //Top Text
+  text(enteredDate[lang], width/2, height/2-200);
   textFont(font, 45); //Setting Text Font
   text(otherCalDate + " (Day " + periodOther + ")", width/2, height/2-130);
   drawTimesOther();
@@ -224,11 +231,11 @@ void drawTimes() {
           link("https://covid-19.ontario.ca/school-screening/");
         }
       }
-      text("P1: " + p1Class + " In Class", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p1Class + inSchool[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohort == 'B' && period == 1 && cohort == 'A') {
-      text("P1: " + p1Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohort == 'A' && period == 2 && cohort == 'A') {
       if (!warningShown && alpha >= 255 && hour() <= 9) {
         booster.showConfirmDialog(
@@ -251,14 +258,14 @@ void drawTimes() {
           link("https://covid-19.ontario.ca/school-screening/");
         }
       }
-      text("P1: " + p2Class + " In Class", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p2Class + inSchool[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohort == 'B' && period == 2 && cohort == 'A') {
-      text("P1: " + p2Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohort == 'A' && period == 1 && cohort == 'B') {
-      text("P1: " + p1Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohort == 'B' && period == 1 && cohort == 'B') {
       if (!warningShown && alpha >= 255 && hour() <= 9) {
         booster.showConfirmDialog(
@@ -281,11 +288,11 @@ void drawTimes() {
           link("https://covid-19.ontario.ca/school-screening/");
         }
       }
-      text("P1: " + p1Class + " In Class", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p1Class + inSchool[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohort == 'A' && period == 2 && cohort == 'B') {
-      text("P1: " + p2Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohort == 'B' && period == 2 && cohort == 'B') {
       if (!warningShown && alpha >= 255  && hour() <= 9) {
         booster.showConfirmDialog(
@@ -308,20 +315,20 @@ void drawTimes() {
           link("https://covid-19.ontario.ca/school-screening/");
         }
       }
-      text("P1: " + p2Class + " In Class", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p2Class + inSchool[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     } else   if (currentCohort == 'A' && period == 1 && cohort == 'C') {
-      text("P1: " + p1Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohort == 'B' && period == 1 && cohort == 'C') {
-      text("P1: " + p1Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p2Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohort == 'A' && period == 2 && cohort == 'C') { 
-      text("P1: " + p2Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     } else if (currentCohort == 'B' && period == 2 && cohort == 'C') {
-      text("P1: " + p2Class + " At Home", width/2, height/2-105); //Drawing   times
-      text("P2: " + p1Class + " At Home", width/2, height/2-52);
+      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
+      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
     }
   }
   popMatrix();

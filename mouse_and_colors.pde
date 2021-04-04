@@ -189,7 +189,9 @@ void mousePressed() {
   } else if (mouseY >= height -  height*0.102986612 && mouseX >=width - height*0.102986612) {
     otherDay = booster.showTextInputDialog("Enter the day you wish to check, in the mm/dd format. Ex: 02/15");
     if (otherDay != null) {
-      screenNumber = 3;
+      if (view == 0) {
+        screenNumber = 3;
+      }
       parseDate(otherDay);
     }
   } else if (mouseY >= height -  height*0.102986612 && mouseX <= width/2 + height*0.102986612/2 && mouseX >= width/2 - height*0.102986612/2) {

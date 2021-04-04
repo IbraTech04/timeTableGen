@@ -1,9 +1,9 @@
-public class clickableText {
+public class ClickableText {
   String text;
   int textPosX;
   int textPosY;
   int textSize;
-  boolean isCenter;
+  boolean isCenter = false;
   public boolean isPressed() {
     if (isCenter) {
       if (mouseX >= textPosX - ((text.length())*textSize/2)/2 && mouseX <= textPosX + ((text.length())*textSize/2)/2 && mouseY >= textPosY-textSize && mouseY <= textPosY) {
@@ -19,7 +19,6 @@ public class clickableText {
     }
   }
   public void drawText() {
-    textSize(textSize);
     if (isCenter) {
       textAlign(CENTER);
     } else {
@@ -74,45 +73,45 @@ class WeekRect {
     }
     if (cohort == 'A') {
       if (args[3].equals("A1")) {
-        P1Class = p1Class + " In School";
-        P2Class = p2Class + " At Home";
+        P1Class = p1Class + inSchool[lang];
+        P2Class = p2Class + atHome[lang];
       } else if (args[3].equals("A2")) {
-        P1Class = p2Class + " In School";
-        P2Class = p1Class + " At Home";
+        P1Class = p2Class + inSchool[lang];
+        P2Class = p1Class + atHome[lang];
       } else if (args[3].equals("B1")) {
-        P1Class = p1Class + " At Home";
-        P2Class = p2Class + " At Home";
+        P1Class = p1Class + atHome[lang];
+        P2Class = p2Class + atHome[lang];
       } else if (args[3].equals("B2")) {
-        P1Class = p2Class + " At Home";
-        P2Class = p1Class + " At Home";
+        P1Class = p2Class + atHome[lang];
+        P2Class = p1Class + atHome[lang];
       }
     } else if (cohort == 'B') {
       if (args[3].equals("A1")) {
-        P1Class = p1Class + " At Home";
-        P2Class = p2Class + " At Home";
+        P1Class = p1Class + atHome[lang];
+        P2Class = p2Class + atHome[lang];
       } else if (args[3].equals("A2")) {
-        P1Class = p2Class + " At Home";
-        P2Class = p1Class + " At Home";
+        P1Class = p2Class + atHome[lang];
+        P2Class = p1Class + atHome[lang];
       } else if (args[3].equals("B1")) {
-        P1Class = p1Class + " In School";
-        P2Class = p2Class + " At Home";
+        P1Class = p1Class + inSchool[lang];
+        P2Class = p2Class + atHome[lang];
       } else if (args[3].equals("B2")) {
-        P1Class = p2Class + " In School";
-        P2Class = p1Class + " At Home";
+        P1Class = p2Class + inSchool[lang];
+        P2Class = p1Class + atHome[lang];
       }
     } else {
       if (args[3].equals("A1")) {
-        P1Class = p1Class + " At Home";
-        P2Class = p2Class + " At Home";
+        P1Class = p1Class + atHome[lang];
+        P2Class = p2Class + atHome[lang];
       } else if (args[3].equals("A2")) {
-        P1Class = p2Class + " At Home";
-        P2Class = p1Class + " At Home";
+        P1Class = p2Class + atHome[lang];
+        P2Class = p1Class + atHome[lang];
       } else if (args[3].equals("B1")) {
-        P1Class = p1Class + " At Home";
-        P2Class = p2Class + " At Home";
+        P1Class = p1Class + atHome[lang];
+        P2Class = p2Class + atHome[lang];
       } else if (args[3].equals("B2")) {
-        P1Class = p2Class + " At Home";
-        P2Class = p1Class + " At Home";
+        P1Class = p2Class + atHome[lang];
+        P2Class = p1Class + atHome[lang];
       }
     }
   }
@@ -135,8 +134,8 @@ class WeekRect {
       textFont(font, 25); //Setting Text Font
       text(day + "\n" + dayPt2, 20, 45);
       textFont(font, 30); //Setting Text Font
-      text("P1: " + P1Class, 240, 50);
-      text("P2: " + P2Class, 240, 90);
+      text(P1[lang] + P1Class, 240, 45);
+      text(P2[lang] + P2Class, 240, 85);
     }
   }
 }

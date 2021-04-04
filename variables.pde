@@ -7,10 +7,18 @@ int date = cal.get(Calendar.DAY_OF_WEEK), period, state = 0, picCol = 255, colTo
 String[] nversionFromServer;
 int shiftRegister = 0, screenNumber = 0;
 
-String[] week = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}, months = {"", "January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"};
-String dayOfWeek = week[date], p1Class = "", p2Class = "", monthString = months[month()] + year(), Theme = "", cScheme = "";
-;
-String calDate = week[date] + " " + months[month()] + " " + day() + " " + year(), reason = "Weekend";
+int lang = 0, view = 0, guiTrans = -70;
+
+String[] englishWeek = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}, englishMonths = {"", "January", "February", "March", "April", "May", "June", "July", "Auguest", "September", "October", "November", "December"};
+String[] arabicWeek = {"", " الأحد", "الاثنين", " الثلاثاء", "الأربعاء", " الخميس", " الجمعة", " السبت"}, arabicMonths = {"", "يناير", "فبراير", "مارس", "أبريل ", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"};
+
+String[][] testWeek = {englishWeek,arabicWeek};
+String[][] testMonth = {englishMonths, arabicMonths};
+String[] week = englishWeek;
+String[] months = englishMonths;
+String dayOfWeek, p1Class = "", p2Class = "", monthString, Theme = "", cScheme = "";
+
+String calDate, reason = "Weekend";
 String[] wedDates, pref;
 String otherDay;
 float transSpeed = 2.5;
@@ -19,21 +27,26 @@ char cohort, currentCohort;
 boolean isSetUp = true, customTheme, checkOtherDay = false, reset = false, warningShown = false, showVer = false, updateMode = false, updateMode2 = false;
 float alpha = 0;
 
-String ver = "3.2.5";
+String ver = "3.2.6";
 int verCounter = 0;
 
 int guiState = 0, updateState = 0;
 
-int lang = 0, view = 0, guiTrans = -70;
 
-String[] titleText = {"TimeTableGen Home"};
-String[] settingsText = {"TimeTableGen Settings"};
-String[] dateText = {"TimeTableGen Custom Date Lookup"};
+String[] titleText = {"TMTimeTable Home", "برنامج الجدول الزمني"};
+String[] settingsText = {"TMTimeTable Settings", "إعدادات"};
+String[] dateText = {"TMTimeTable Custom Date Lookup", "بحث التاريخ"};
+String[] enteredDate = {"Your Schedule for entered date:", "الجدول الزمني الخاص بك لـ:"};
 
-String[] mainText = {""};
-String[] disc = {""};
-String[] theme = {""};
-String[] colorText = {""};
+String[] schedToday = {"Your Schedule for today:", "جدول اليوم:"};
+
+String[] atHome = {" At Home", " في البيت"};
+String[] inSchool = {" In School", " في المدرسة"};
+
+String[] P1 = {"P1: ", "الحصة ١ "};
+String[] P2 = {"P2: ", "الحصة ٢ "};
+
+String[] resetString = {"Press F to perform a factory reset", "اضغط F لإعادة التعيين"};
 
 int daysLeft = 100;
 
