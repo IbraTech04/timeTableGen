@@ -114,7 +114,8 @@ void mousePressed() {
             newColors[2] = 145;
           }
         }
-        writeData(forceCohortC); ;
+        writeData(forceCohortC); 
+        ;
       } else if (settings.get(1).isPressed()) {
         verCounter = 0;
         if (!customTheme && !Theme.equals("Really Dark") && !Theme.equals("Really Light")) {
@@ -150,7 +151,8 @@ void mousePressed() {
             newColors[2] = 245;
           }
         }
-        writeData(forceCohortC); ;
+        writeData(forceCohortC); 
+        ;
       } else if (settings.get(2).isPressed()) {
         verCounter = 0;
         String backup = p1Class;
@@ -158,7 +160,8 @@ void mousePressed() {
         if (p1Class == null) {
           p1Class = backup;
         }
-        writeData(forceCohortC); ;
+        writeData(forceCohortC); 
+        ;
         initWeekView();
       } else if (settings.get(3).isPressed()) {
         verCounter = 0;
@@ -167,7 +170,8 @@ void mousePressed() {
         if (p2Class == null) {
           p2Class = backup;
         }
-        writeData(forceCohortC); ;
+        writeData(forceCohortC); 
+        ;
         initWeekView();
       } else if (settings.get(4).isPressed()) {
         if (!forceCohortC) {
@@ -191,7 +195,8 @@ void mousePressed() {
         } else {
           transSpeed = 1;
         }
-        writeData(forceCohortC); ;
+        writeData(forceCohortC); 
+        ;
       } else {
         verCounter ++;
       }
@@ -216,12 +221,14 @@ void mousePressed() {
         addEvent(event);
       }
     } else if (mouseY >= height -  height*0.102986612 && mouseX <= width/2 + height*0.102986612/2 && mouseX >= width/2 - height*0.102986612/2) {
-      if (view == 0) {
-        view = 1;
-      } else {
-        view = 0;
+      if (screenNumber == 0) {
+        if (view == 0) {
+          view = 1;
+        } else {
+          view = 0;
+        }
+        writeData(forceCohortC);
       }
-      writeData(forceCohortC); ;
     }
   }
 }
