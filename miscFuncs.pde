@@ -41,9 +41,11 @@ void reset() {
   p2Class = "";
   alpha = 0;
   screenNumber = 0;
+  picCol = 0;
+  transSpeed = 2.5;
   setup();
 }
 
 void drawRect() {
-  rect(10, 10, width-20, 90, 10, 10, 10, 10);
+  rect(10, 10, width-20, 90, 15, 15, 15, 15);
 }

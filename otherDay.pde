@@ -51,12 +51,11 @@ void parseDate(String lineIn) {
       booster.showErrorDialog("Invalid Date Entered. Please Try again", "Error");
       screenNumber = 0;
     }
-    println("here");
   }
   else if (view == 1){
      Calendar toView = Calendar.getInstance();
      int day = toView.get(Calendar.DAY_OF_YEAR);
-     toSubtract += (-91.8651685*day)-(height*0.333333333) + height-720;
+     transScale = (-91.8651685*day)-(height*0.333333333) + height-720;
   }
 }
 void calculateClassesOther(String day, String month) {

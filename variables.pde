@@ -22,12 +22,12 @@ String calDate, reason = "Weekend";
 String[] wedDates, pref;
 String otherDay;
 float transSpeed = 2.5;
-char cohort, currentCohort;
+char cohort, currentCohort, backupCohort;
 
 boolean isSetUp = true, customTheme, checkOtherDay = false, reset = false, warningShown = false, showVer = false, updateMode = false, updateMode2 = false;
 float alpha = 0;
 
-String ver = "3.2.6";
+String ver = "4";
 int verCounter = 0;
 
 int guiState = 0, updateState = 0;
@@ -51,3 +51,7 @@ String[] resetString = {"Press F to perform a factory reset", "اضغط F لإع
 int daysLeft = 100;
 
 float transScale;
+
+String[] reg;
+
+boolean forceCohortC = false;

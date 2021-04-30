@@ -4,16 +4,6 @@ float aniSpeed;
 void sizeDeteccLegacy() {
   float wid = width;
   float hei = height;
-  //Theme Toggle Button Coords
-  them[0] = wid*0.37109375;
-  them[1] = wid*0.62734375;
-  them[2] = hei*0.231944444;
-  them[3] = hei*0.291666667;
-  //Color Button Toggle Coords
-  clr[0] = wid*0.30703125;
-  clr[1] = wid*0.68203125;
-  clr[2] = hei*0.305555556;
-  clr[3] = hei*0.369444444;
   //Theme Text Position
   themPos[0] = hei*0.291666667;
   //Color Text Position
@@ -25,9 +15,5 @@ void sizeDeteccLegacy() {
   //UDP IP Text Position
   changeCohort[0] = hei*0.569444444;
   //Verbose Button Coords
-  changeCourseOne[0] = wid*0.27265625;
-  changeCourseOne[1] = wid*0.71796875;
-  changeCourseOne[2] = hei*0.376388889;
-  changeCourseOne[3] = hei*0.427777778;
   aniSpeed = hei*0.64;
 }

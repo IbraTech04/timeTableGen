@@ -20,7 +20,7 @@ void keyPressed() {
       } else  if (key == BACKSPACE) {
         p2Class = p2Class.substring(0, max(0, p2Class.length() - 1));
       } else if (key == ENTER) {
-        writeData();
+        writeData(forceCohortC); ;
         state = 3;
       }
     }

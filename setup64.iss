@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TMTimeTable"
-#define MyAppVersion "3.2.5"
+#define MyAppVersion "3.2.6"
 #define MyAppPublisher "Ibrahim Chehab"
 #define MyAppURL "https://github.com/IbraTech04"
 #define MyAppExeName "timeTableGenV2.exe"
