@@ -95,6 +95,7 @@ void initWeekView() {
   viewWeek.set(Calendar.MONTH, 5);
   viewWeek.set(Calendar.DAY_OF_MONTH, 29);
   daysLeft = (viewWeek.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_YEAR)) + 1;
+  actualDaysLeft = daysLeft;
   for (int i = cal.get(Calendar.DAY_OF_YEAR); i <= viewWeek.get(Calendar.DAY_OF_YEAR); i++) {
     Calendar temp = Calendar.getInstance();
     temp.set(Calendar.DAY_OF_YEAR, i);

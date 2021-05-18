@@ -73,6 +73,7 @@ class WeekRect {
     cal.set(Calendar.DAY_OF_YEAR, dayOfYear);
     if (args[2].equals("true")) {
       noSchool = true;
+      actualDaysLeft--;
     } else {
       noSchool = false;
     }
@@ -145,8 +146,8 @@ class WeekRect {
     }
     if (mousePressed && mouseX >= 10 && mouseX <= width-20 && mouseY >= ((id*100) + (height*0.145833333)) + transScale && mouseY <= ((id*100) + (height*0.145833333) +transScale) + 90) {
       if (mouseY < height -  height*0.102986612) {
-        //event = cal;
-        //screenNumber = 4;
+        event = cal;
+        screenNumber = 4;
       }
     }
   }

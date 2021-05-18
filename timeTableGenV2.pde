@@ -23,6 +23,7 @@ ArrayList<Event> events = new ArrayList<Event>();
 Calendar cal = Calendar.getInstance(); //Get calendar date
 Calendar viewWeek = Calendar.getInstance(); //Get calendar date
 Calendar event = Calendar.getInstance(); 
+
 UiBooster booster;
 void settings() {
   size(1280, 720);
@@ -104,6 +105,7 @@ void setup() {
 }
 
 void draw() {
+  println(actualDaysLeft);
   if (updateMode) {
     update();
   } else {
@@ -197,9 +199,9 @@ void guiSettings() {
   settings.get(0).drawText();
 
   if (Theme.equals("Really Dark")) {
-    settings.get(1).setText("Color Scheme: Really Light");
+    settings.get(1).setText("Color Scheme: Really Dark");
   } else if (Theme.equals("Really Light")) {
-    settings.get(1).setText("Color Scheme: Really Light");
+    settings.get(1).setText("Color Scheme: Really Light (You menace to society)");
   } else {
     settings.get(1).setText("Color Scheme: " + cScheme);
   }

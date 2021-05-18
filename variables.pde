@@ -5,7 +5,7 @@ PrintWriter output;
 float[] colors = {60, 135, 245, 128, 0, 0, 92, 153, 107}, textColor = {255, 255, 255}, backGroundColor = {0, 0, 0};
 int date = cal.get(Calendar.DAY_OF_WEEK), period, state = 0, picCol = 255, colToBe = 255;
 String[] nversionFromServer;
-int shiftRegister = 0, screenNumber = 0;
+int shiftRegister = 0, screenNumber = 0, actualDaysLeft;
 
 int lang = 0, view = 0, guiTrans = -70;
 
