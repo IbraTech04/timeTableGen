@@ -83,7 +83,6 @@ void update() {
       }
 
       if (!Desktop.isDesktopSupported()) {
-        System.out.println("Desktop is not supported");
         return;
       }
       file = new File(System.getProperty("user.home")+"\\TMTimeTable\\TMTimeTableV" + nversionFromServer[0] + ".exe");

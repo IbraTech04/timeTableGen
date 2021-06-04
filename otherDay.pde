@@ -1,4 +1,4 @@
-int periodOther, dayOfMonth;
+int periodOther, dayOfMonth; //<>//
 char currentCohortOther;
 boolean noSchoolOther;
 String otherCalDate;
@@ -8,54 +8,50 @@ void parseDate(String lineIn) {
       lineIn = lineIn.toUpperCase();
       if (lineIn.equals("TOMORROW")) {
         Calendar c = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, day()+1);
+        int ID = c.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR);
         dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
         String dayOfWeek = testWeek[0][c.get(Calendar.DAY_OF_WEEK)];
         String month = testMonth[0][c.get(Calendar.MONTH)+1];
-        calculateClassesOther(dayOfWeek, month);
-        noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH)+1);
+        otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
 
-        dayOfWeek = testWeek[lang][c.get(Calendar.DAY_OF_WEEK)];
-        month = testMonth[lang][c.get(Calendar.MONTH)+1];
-        if (lang == 0) {
-          otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
-        } else if (lang == 1) {
-          otherCalDate = dayOfWeek + " " + c.get(Calendar.DAY_OF_MONTH) + " " + month + " 2021";
-        }
+        getDataFromWeekView(ID);
       } else if (lineIn.equals("TODAY")) {
         screenNumber = 0;
       } else if (lineIn.equals("WEDNESDAY") || lineIn.equals("WED")) {
-        checkWedOther(preCheckWed(false));
+        Calendar today = Calendar.getInstance();
+        int ID = preCheckWed(false);
+        getDataFromWeekView(ID);
       } else if (lineIn.equals("NEXT WEDNESDAY") || lineIn.equals("NEXT WED")) {
-        checkWedOther(preCheckWed(true));
+        int ID = preCheckWed(true);
+        getDataFromWeekView(ID);
       } else {
+        Calendar today = Calendar.getInstance();
         String[] split = split(lineIn, '/');
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, int(split[1]));
         c.set(Calendar.MONTH, int(split[0]) - 1);
+
+        int ID = c.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR);
+        getDataFromWeekView(ID);
+
         dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
         String dayOfWeek = week[c.get(Calendar.DAY_OF_WEEK)];
         String month = months[c.get(Calendar.MONTH) + 1];
-        calculateClassesOther(dayOfWeek, month);
-        noSchoolOther = noSchoolOther(dayOfWeek, c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH));
         dayOfWeek = testWeek[lang][c.get(Calendar.DAY_OF_WEEK)];
         month = testMonth[lang][c.get(Calendar.MONTH) + 1];
-        if (lang == 0) {
-          otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
-        } else if (lang == 1) {
-          otherCalDate = dayOfWeek + " " + c.get(Calendar.DAY_OF_MONTH) + " " + month + " 2021";
-        }
+        otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
       }
     }
     catch (Exception e) {
       booster.showErrorDialog("Invalid Date Entered. Please Try again", "Error");
       screenNumber = 0;
     }
-  }
-  else if (view == 1){
-     Calendar toView = Calendar.getInstance();
-     int day = toView.get(Calendar.DAY_OF_YEAR);
-     transScale = (-91.8651685*day)-(height*0.333333333) + height-720;
+  } else if (view == 1) {
+    Calendar toView = Calendar.getInstance();
+    int day = toView.get(Calendar.DAY_OF_YEAR);
+    transScale = (-91.8651685*day)-(height*0.333333333) + height-720;
   }
 }
 void calculateClassesOther(String day, String month) {
@@ -177,7 +173,7 @@ boolean paDayOther(int day, int month) {
   }
   return false;
 }
-String preCheckWed(boolean next) {
+int preCheckWed(boolean next) {
   int changeFactor = 0;
   if (next) {
     changeFactor = 7;
@@ -203,16 +199,33 @@ String preCheckWed(boolean next) {
   } else if ((wed.get(Calendar.DAY_OF_WEEK)) == 7) {
     changeFactor += 4;
   }
-
-
   wed.set(Calendar.DAY_OF_MONTH, wed.get(Calendar.DAY_OF_MONTH)+changeFactor);
 
   String month = months[wed.get(Calendar.MONTH) + 1];
-  String toPass = month + year();
   dayOfMonth = wed.get(Calendar.DAY_OF_MONTH);
   String dayOfWeek = week[wed.get(Calendar.DAY_OF_WEEK)];
   otherCalDate = dayOfWeek + " " + month + " " + dayOfMonth + " 2021";
-  noSchoolOther = noSchoolOther(dayOfWeek, wed.get(Calendar.DAY_OF_MONTH), wed.get(Calendar.MONTH));
+  return changeFactor;
+}
 
-  return toPass;
+void getDataFromWeekView(int ID) {
+  if (rects.get(ID).getInd().equals("A1")) {
+    noSchoolOther = false;
+    currentCohortOther = 'A';
+    periodOther = 1;
+  } else if (rects.get(ID).getInd().equals("A2")) {
+    noSchoolOther = false;
+    currentCohortOther = 'A';
+    periodOther = 2;
+  } else if (rects.get(ID).getInd().equals("B1")) {
+    noSchoolOther = false;
+    currentCohortOther = 'B';
+    periodOther = 1;
+  } else if (rects.get(ID).getInd().equals("B2")) {
+    noSchoolOther = false;
+    currentCohortOther = 'B';
+    periodOther = 2;
+  } else {
+    noSchoolOther = true;
+  }
 }

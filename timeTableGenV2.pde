@@ -69,7 +69,11 @@ void setup() {
   monthString = months[month()] + year();
   dayOfWeek = week[date];
   try {
-    pref = loadStrings(System.getProperty("user.home")+"\\TMTimeTable\\pref.txt");
+    if (System.getProperty("sun.desktop").equals("windows")) {
+      pref = loadStrings(System.getProperty("user.home")+"\\TMTimeTable\\pref.txt");
+    } else {
+      pref = loadStrings(System.getProperty("user.home")+"/TMTimeTable/pref.txt");
+    }
     loadData();
   }
   catch (Exception e) {
@@ -102,10 +106,10 @@ void setup() {
   }
   catch (Exception e) {
   }
+  println("Days Left " + actualDaysLeft);
 }
 
 void draw() {
-  println(actualDaysLeft);
   if (updateMode) {
     update();
   } else {

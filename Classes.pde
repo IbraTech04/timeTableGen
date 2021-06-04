@@ -7,7 +7,6 @@ public class ClickableText {
   public boolean isPressed() {
     if (isCenter) {
       if (mouseX >= textPosX - ((text.length())*textSize/2)/2 && mouseX <= textPosX + ((text.length())*textSize/2)/2 && mouseY >= textPosY-textSize && mouseY <= textPosY) {
-        println("here");
         return true;
       }
       return false;
@@ -66,6 +65,7 @@ class WeekRect {
   String P1Class;
   String P2Class;
   boolean noSchool;
+  String indent;
   Calendar cal = Calendar.getInstance();
   public WeekRect(String[] args, int newID, int dayOfYear) {
     day = args[0];
@@ -77,6 +77,7 @@ class WeekRect {
     } else {
       noSchool = false;
     }
+    indent = args[3];
     if (cohort == 'A') {
       if (args[3].equals("A1")) {
         P1Class = p1Class + inSchool[lang];
@@ -149,6 +150,21 @@ class WeekRect {
         event = cal;
         screenNumber = 4;
       }
+    }
+  }
+
+  public String getP1() {
+    return P1Class;
+  }
+  public String getP2() {
+    return P2Class;
+  }
+
+  public String getInd() {
+    if (noSchool) {
+      return "NS";
+    } else {
+      return indent;
     }
   }
 }

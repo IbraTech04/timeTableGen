@@ -19,7 +19,6 @@ void mousePressed() {
   } else {
     if (screenNumber == 1) {
       if (settings.get(0).isPressed()) {
-        println("here");
         verCounter = 0;
         if (Theme.equals("Dark")) {
           Theme = "Light";

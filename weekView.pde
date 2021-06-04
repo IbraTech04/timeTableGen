@@ -25,26 +25,21 @@ void weekView() {
   transScale -= toSubtract;
   if (toSubtract > 0) {
     if (toSubtract > 250) {
-      toSubtract-=15;
+      toSubtract-=6.3;
     } else {
-      toSubtract-=2.5;
+      toSubtract -= 1.45;
     }
     if (toSubtract < 0) {
       toSubtract = 0;
     }
   } else if (toSubtract < 0) {
     if (toSubtract < -250) {
-      toSubtract+=15;
+      toSubtract+=6.3;
     } else {
-      toSubtract+=2.5;
+      toSubtract += 1.45;
     }
   }
-  if (transScale > 250) {
-    toSubtract -=7;
-  }
-  if (transScale > 150) {
-    toSubtract -=5;
-  }
+  
   if (transScale > 0) {
     transScale = 0;
   } 
@@ -84,7 +79,7 @@ void weekView() {
 void mouseWheel(MouseEvent event) {
   if (view == 1 && screenNumber == 0) {
     float e = event.getCount();
-    toSubtract += e*8.75;
+    toSubtract += e*6.9;
     if (toSubtract < 0&&transScale == 0) {
       toSubtract = 0;
     }
