@@ -17,3 +17,14 @@ void sizeDeteccLegacy() {
   //Verbose Button Coords
   aniSpeed = hei*0.64;
 }
+
+float sizeDetecW(float input, float divisor) {
+  float toReturn;
+  toReturn = input/1280;
+  return toReturn*divisor;
+}
+float sizeDetecH(float input, float divisor) {
+  float toReturn;
+  toReturn = input/720;
+  return toReturn*divisor;
+}

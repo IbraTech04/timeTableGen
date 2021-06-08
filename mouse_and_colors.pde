@@ -231,16 +231,7 @@ void mousePressed() {
     }
   }
 }
-float sizeDetecW(float input, float divisor) {
-  float toReturn;
-  toReturn = input/1280;
-  return toReturn*divisor;
-}
-float sizeDetecH(float input, float divisor) {
-  float toReturn;
-  toReturn = input/720;
-  return toReturn*divisor;
-}
+
 void colorShift(int r, int g, int b) {
   if (colors[0] > r) {
     colors[0]-=transSpeed;

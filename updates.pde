@@ -18,7 +18,7 @@ void checkForUpdates() {
       }
       );        
       if (isConfirmed) {
-        //link("https://github.com/IbraTech04/timeTableGen/releases");
+        updateMode = true;
       }
     } else {
       booster.showConfirmDialog(
@@ -37,7 +37,6 @@ void checkForUpdates() {
       }
       );        
       if (isConfirmed) {
-        // link("https://github.com/IbraTech04/timeTableGen/releases");
         updateMode = true;
       }
     }

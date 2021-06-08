@@ -4,7 +4,6 @@ import processing.awt.PSurfaceAWT.SmoothCanvas;
 import javax.swing.JFrame;
 import java.awt.Dimension;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.awt.Desktop;
@@ -24,12 +23,12 @@ Calendar cal = Calendar.getInstance(); //Get calendar date
 Calendar viewWeek = Calendar.getInstance(); //Get calendar date
 Calendar event = Calendar.getInstance(); 
 
+ClickableText A, B, C;
+
 UiBooster booster;
 void settings() {
   size(1280, 720);
 }
-
-ClickableText A, B, C;
 
 void setup() {
   A = new ClickableText();
@@ -276,7 +275,9 @@ void eventRemember() {
   textFont(font, 50); //Setting Text Font
   text("TMTimeTable OnTime\u2122", width/2, height*0.0494444444 + 25); //Top Text\
   textAlign(LEFT);
-  text("P1:", 10, height*0.138888889 + 25); //Top Text\
+  int ID = event.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_YEAR);
+  
+  text("P1: " + rects.get(ID).getP1(), 10, height*0.138888889 + 25); //Top Text\
 
   pushMatrix();
   translate(0, height*0.145833333 + 45);
@@ -289,7 +290,7 @@ void eventRemember() {
   }
   translate(0, 25);
   textFont(font, 50); //Setting Text Font
-  text("P2:", 10, 10 + 25); //Top Text\
+  text("P2: " + rects.get(ID).getP2(), 10, 10 + 25); //Top Text\
   translate(0, 50);
   for (int i = 0; i < events.size(); i++) {
     if (events.get(i).day == event.get(Calendar.DAY_OF_MONTH) && events.get(i).month == event.get(Calendar.MONTH) + 1 && events.get(i).period.equals("P2")) {

@@ -145,7 +145,7 @@ class WeekRect {
       text(P1[lang] + P1Class, 240, 45);
       text(P2[lang] + P2Class, 240, 85);
     }
-    if (mousePressed && mouseX >= 10 && mouseX <= width-20 && mouseY >= ((id*100) + (height*0.145833333)) + transScale && mouseY <= ((id*100) + (height*0.145833333) +transScale) + 90) {
+    if (mousePressed && mouseX >= 10 && mouseX <= width-20 && mouseY >= ((id*100) + (height*0.145833333)) + transScale && mouseY <= ((id*100) + (height*0.145833333) +transScale) + 90 && !noSchool) {
       if (mouseY < height -  height*0.102986612) {
         event = cal;
         screenNumber = 4;

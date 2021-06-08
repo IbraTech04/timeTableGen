@@ -20,7 +20,6 @@ void parseDate(String lineIn) {
       } else if (lineIn.equals("TODAY")) {
         screenNumber = 0;
       } else if (lineIn.equals("WEDNESDAY") || lineIn.equals("WED")) {
-        Calendar today = Calendar.getInstance();
         int ID = preCheckWed(false);
         getDataFromWeekView(ID);
       } else if (lineIn.equals("NEXT WEDNESDAY") || lineIn.equals("NEXT WED")) {
@@ -52,54 +51,6 @@ void parseDate(String lineIn) {
     Calendar toView = Calendar.getInstance();
     int day = toView.get(Calendar.DAY_OF_YEAR);
     transScale = (-91.8651685*day)-(height*0.333333333) + height-720;
-  }
-}
-void calculateClassesOther(String day, String month) {
-  if (day.equals("Monday")) {
-    currentCohortOther = 'A';
-    periodOther = 1;
-  } else if (day.equals("Tuesday")) {
-    currentCohortOther = 'A';
-    periodOther = 2;
-  } else if (day.equals("Thursday")) {
-    currentCohortOther = 'B';
-    periodOther = 1;
-  } else if (day.equals("Friday")) {
-    currentCohortOther = 'B';
-    periodOther = 2;
-  } else {
-    String toPass = month + year();
-    checkWedOther(toPass);
-  }
-}
-void checkWedOther(String toPass) {
-  for (int i = 0; i < wedDates.length; i++) { //Until you find the entry with todays date continue the loop
-    String temp = wedDates[i];
-    if (temp.equals(toPass)) {
-      loadWedOther(i);
-      break;
-    }
-  }
-}
-void loadWedOther(int i) {
-  for (int j = i; j < wedDates.length; j++) { //Until you find the entry with todays date continue the loop
-    String temp = wedDates[j];
-    if (temp.equals(str(dayOfMonth))) {
-      if (wedDates[j+1].equals("A1")) {
-        currentCohortOther = 'A';
-        periodOther = 1;
-      } else if (wedDates[j+1].equals("B1")) {
-        currentCohortOther = 'B';
-        periodOther = 1;
-      } else if (wedDates[j+1].equals("A2")) {
-        currentCohortOther = 'A';
-        periodOther = 2;
-      } else if (wedDates[j+1].equals("B2")) {
-        currentCohortOther = 'B';
-        periodOther = 2;
-      }
-      break;
-    }
   }
 }
 
@@ -150,18 +101,6 @@ void drawTimesOther() {
   popMatrix();
 }
 
-boolean noSchoolOther(String weekDay, int day, int month) {
-
-  if (weekDay == "Saturday" || weekDay == "Sunday") {
-    reason = "Weekend";
-    return true;
-  } else if (paDayOther(day, month+1)) {
-    reason = "PA Day";
-    return true;
-  } else {
-    return false;
-  }
-}
 boolean paDayOther(int day, int month) {
   int[] months = {2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 6};
   int[] days = {15, 2, 5, 12, 13, 14, 15, 16, 26, 27, 24, 28, 29};

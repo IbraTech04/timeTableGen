@@ -45,7 +45,3 @@ void reset() {
   transSpeed = 2.5;
   setup();
 }
-
-void drawRect() {
-  rect(10, 10, width-20, 90, 15, 15, 15, 15);
-}
