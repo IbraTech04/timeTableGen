@@ -11,6 +11,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.awt.FlowLayout;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import java.time.*;
 
 int col;
 boolean isConfirmed;
@@ -21,38 +25,28 @@ ArrayList<Event> events = new ArrayList<Event>();
 
 Calendar cal = Calendar.getInstance(); //Get calendar date
 Calendar viewWeek = Calendar.getInstance(); //Get calendar date
-Calendar event = Calendar.getInstance(); 
-
-ClickableText A, B, C;
+Calendar event = Calendar.getInstance();
 
 UiBooster booster;
-void settings() {
-  size(1280, 720);
-}
 
 void setup() {
-  A = new ClickableText();
-  A.setText("A");
-  A.setMode("CENTER");
-  A.setPos(width/2 - 300, height/2 + 50);
-  A.setSize(150);
-  B = new ClickableText();
-  B.setText("B");
-  B.setMode("CENTER");
-  B.setPos(width/2, height/2 + 50);
-  B.setSize(150);
+  size(1280, 720);
+  ImgLoader img = new ImgLoader();
+  img.start();
+  UpdaterThread up = new UpdaterThread();
+  up.start();
+  File saveDir;
+  if (System.getProperty("sun.desktop").equals("windows")) {
 
-  C = new ClickableText();
-  C.setText("C");
-  C.setMode("CENTER");
-  C.setPos(width/2 + 300, height/2 + 50);
-  C.setSize(150);
-
-  File saveDir = new File(System.getProperty("user.home") + "\\TMTimeTable");
+    saveDir = new File(System.getProperty("user.home") + "\\TMTimeTable");
+  } else {
+    saveDir = new File(System.getProperty("user.home") + "/TMTimeTable");
+  }
   if (!saveDir.exists()) {
     saveDir.mkdirs();
   }
   background(0);
+
   booster = new UiBooster();
   homep = loadImage("HomeL.png");
   settingsp = loadImage("SettingsL.png");
@@ -64,7 +58,6 @@ void setup() {
   font = createFont("ProductSans-Bold.ttf", 100); //Load the font
   surface.setTitle("TMTimeTable");
   surface.setResizable(true);
-  wedDates = loadStrings("Wed1.txt");
   monthString = months[month()] + year();
   dayOfWeek = week[date];
   try {
@@ -78,14 +71,8 @@ void setup() {
   catch (Exception e) {
     prepareFirstTime();
   }
-  calculateClasses();
-  try {
-    checkForUpdates();
-  }
-  catch (Exception e) {
-  }
   initWeekView();
-  for (int i = 0; i < 6; i ++) {
+  for (int i = 0; i < 7; i ++) {
     settings.add(new ClickableText());
     settings.get(i).setMode("CENTER");
     settings.get(i).setSize(50);
@@ -93,30 +80,26 @@ void setup() {
   loadEvents();
 
   try {
-    reg = loadStrings("https://raw.githubusercontent.com/IbraTech04/updateServer/master/timeTableReg.txt");
-    String cForce = split(reg[0], '=')[1];
-    if (cForce.equals("true")) {
-      backupCohort = cohort;
-      cohort = 'C';
-      forceCohortC = true;
-      booster.showInfoDialog("Your cohort has been set to C, as per the server requirements");
-      initWeekView();
-    }
+    //reg = loadStrings("https://raw.githubusercontent.com/IbraTech04/updateServer/master/timeTableReg.txt");
   }
   catch (Exception e) {
   }
-  println("Days Left " + actualDaysLeft);
 }
+
 
 void draw() {
   if (updateMode) {
-    update();
+    if (alpha > 0) {
+      alpha-=17;
+    } else {
+      update();
+    }
   } else {
     colorShift(newColors[0], newColors[1], newColors[2]);
     colorShiftBG(newBG[0], newBG[1], newBG[2]);
     colorShiftText(newText[0], newText[1], newText[2]);
     colorShiftImg(colToBe);
-    calculateClasses();
+    roundShift(newRoundAmount);
     tint(picCol, alpha);
 
     sizeDeteccLegacy();
@@ -137,7 +120,7 @@ void draw() {
           if (alpha < 0) {
             reset();
           }
-        }      
+        }
         guiSettings();
       } else if (screenNumber == 3) {
         checkOtherTime();
@@ -154,8 +137,8 @@ int c = 0;
 void mainScreen() {
   background(backGroundColor[0], backGroundColor[1], backGroundColor[2]);
   fill(colors[0], colors[1], colors[2], alpha);
-  rect(0, height -  height*0.102986612, width, height, 20, 20, 0, 0); //These two are the two rectangles on the top and bottom
-  rect(0, 0, width, height*0.102986612, 0, 0, 20, 20);
+  rect(0, height -  height*0.102986612, width, height, roundAmount, roundAmount, 0, 0); //These two are the two rectangles on the top and bottom
+  rect(0, 0, width, height*0.102986612, 0, 0, roundAmount, roundAmount);
   textAlign(CENTER);
   fill(textColor[0], textColor[1], textColor[2], alpha);
   textFont(font, 50); //Setting Text Font
@@ -167,7 +150,7 @@ void mainScreen() {
   } else if (lang == 1) {
     calDate = testWeek[lang][date] + " " + day() + " " + testMonth[lang][month()] + " " + year();
   }
-  text(calDate + " (Day " + period + ")", width/2, height/2-130);
+  text(calDate + " (Week " + (getWeekNum() + 1) + ")", width/2, height/2-130);
 
   drawTimes();
 
@@ -182,8 +165,8 @@ void mainScreen() {
 void guiSettings() {
   background(backGroundColor[0], backGroundColor[1], backGroundColor[2]);
   fill(colors[0], colors[1], colors[2], alpha);
-  rect(0, height -  height*0.102986612, width, height, 20, 20, 0, 0); //These two are the two rectangles on the top and bottom
-  rect(0, 0, width, height*0.102986612, 0, 0, 20, 20);
+  rect(0, height -  height*0.102986612, width, height, roundAmount, roundAmount, 0, 0); //These two are the two rectangles on the top and bottom
+  rect(0, 0, width, height*0.102986612, 0, 0, roundAmount, roundAmount);
   pushMatrix();
   fill(textColor[0], textColor[1], textColor[2], alpha);
 
@@ -204,32 +187,28 @@ void guiSettings() {
   if (Theme.equals("Really Dark")) {
     settings.get(1).setText("Color Scheme: Really Dark");
   } else if (Theme.equals("Really Light")) {
-    settings.get(1).setText("Color Scheme: Really Light (You menace to society)");
+    settings.get(1).setText("Color Scheme: Really Light");
   } else {
     settings.get(1).setText("Color Scheme: " + cScheme);
   }
   settings.get(1).setPos(width/2, int(clrPos[0]));
   settings.get(1).drawText();
 
-  settings.get(2).setText("Change Course One: " + p1Class);
+  settings.get(2).setText("Change Course One: " + courses[0][0]);
   settings.get(2).setPos(width/2, int(courseOne[0]));
   settings.get(2).drawText();
 
-  settings.get(3).setText("Change Course Two: " + p2Class);
+  settings.get(3).setText("Change Course Two: " + courses[0][1]);
   settings.get(3).setPos(width/2, int(courseTwo[0]));
   settings.get(3).drawText();
-  if (forceCohortC) {
-    fill(128, 128, 128, alpha);
-  } else {
-    fill(textColor[0], textColor[1], textColor[2], alpha);
-  }
-  settings.get(4).setText("Change Cohort: " + cohort);
+
+  settings.get(4).setText("Change Course Three: " + courses[1][0]);
   settings.get(4).setPos(width/2, int(changeCohort[0]));
   settings.get(4).drawText();
 
   fill(textColor[0], textColor[1], textColor[2], alpha);
 
-  settings.get(5).setText("Animation Speed: " + str(transSpeed));
+  settings.get(5).setText("Change Course Four: " + courses[1][1]);
   settings.get(5).setPos(width/2, int(aniSpeed));
   settings.get(5).drawText();
 
@@ -243,7 +222,7 @@ void guiSettings() {
   image(calendar, width - height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
   if (verCounter >= 5) {
     fill(textColor[0], textColor[1], textColor[2], alpha);
-    textAlign(LEFT);
+    textAlign(RIGHT);
     text("Version: " + ver, width-200, height - height*0.102986612);
   }
 }
@@ -251,8 +230,8 @@ void guiSettings() {
 void checkOtherTime() {
   background(backGroundColor[0], backGroundColor[1], backGroundColor[2]);
   fill(colors[0], colors[1], colors[2], alpha);
-  rect(0, height -  height*0.102986612, width, height, 20, 20, 0, 0); //These two are the two rectangles on the top and bottom
-  rect(0, 0, width, height*0.102986612, 0, 0, 20, 20);
+  rect(0, height -  height*0.102986612, width, height, roundAmount, roundAmount, 0, 0); //These two are the two rectangles on the top and bottom
+  rect(0, 0, width, height*0.102986612, 0, 0, roundAmount, roundAmount);
   image(homep, height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
   image(calendar, width - height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
   fill(textColor[0], textColor[1], textColor[2], alpha);
@@ -260,15 +239,15 @@ void checkOtherTime() {
   text(dateText[lang], width/2, height*0.0494444444 + 25); //Top Text
   text(enteredDate[lang], width/2, height/2-200);
   textFont(font, 45); //Setting Text Font
-  text(otherCalDate + " (Day " + periodOther + ")", width/2, height/2-130);
+  text(otherCalDate + " (Week " + (weekNumOther + 1) + ")", width/2, height/2-130);
   drawTimesOther();
 }
 
 void eventRemember() {
   background(backGroundColor[0], backGroundColor[1], backGroundColor[2]);
   fill(colors[0], colors[1], colors[2]);
-  rect(0, height -  height*0.102986612, width, height, 20, 20, 0, 0); //These two are the two rectangles on the top and bottom
-  rect(0, 0, width, height*0.102986612, 0, 0, 20, 20);
+  rect(0, height -  height*0.102986612, width, height, roundAmount, roundAmount, 0, 0); //These two are the two rectangles on the top and bottom
+  rect(0, 0, width, height*0.102986612, 0, 0, roundAmount, roundAmount);
   image(homep, height*0.102986612/2, height - height*0.102986612/2, height*0.102986612/2, height*0.102986612/2);
   textAlign(CENTER);
   fill(textColor[0], textColor[1], textColor[2]);
@@ -276,7 +255,7 @@ void eventRemember() {
   text("TMTimeTable OnTime\u2122", width/2, height*0.0494444444 + 25); //Top Text\
   textAlign(LEFT);
   int ID = event.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_YEAR);
-  
+
   text("P1: " + rects.get(ID).getP1(), 10, height*0.138888889 + 25); //Top Text\
 
   pushMatrix();
@@ -307,127 +286,8 @@ void drawTimes() {
   if (noSchool()) {
     text("No School today. Reason: " + reason, width/2, height/2-105); //Drawing   times
   } else {
-    if (currentCohort == 'A' && period == 1 && cohort == 'A') {
-      if (!warningShown && alpha >= 255 && hour() <= 9) {
-        booster.showConfirmDialog(
-          "Don't forget to do your COVID Screening. Would you like to go there now?", 
-          "COVID Screening", 
-          new Runnable() {
-          public void run() {
-            isConfirmed = true;
-          }
-        }
-        , 
-          new Runnable() {
-          public void run() {
-            isConfirmed = false;
-          }
-        }
-        );        
-        warningShown = true;
-        if (isConfirmed) {
-          link("https://covid-19.ontario.ca/school-screening/");
-        }
-      }
-      text(P1[lang] + p1Class + inSchool[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohort == 'B' && period == 1 && cohort == 'A') {
-      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohort == 'A' && period == 2 && cohort == 'A') {
-      if (!warningShown && alpha >= 255 && hour() <= 9) {
-        booster.showConfirmDialog(
-          "Don't forget to do your COVID Screening. Would you like to go there now?", 
-          "COVID Screening", 
-          new Runnable() {
-          public void run() {
-            isConfirmed = true;
-          }
-        }
-        , 
-          new Runnable() {
-          public void run() {
-            isConfirmed = false;
-          }
-        }
-        );        
-        warningShown = true;
-        if (isConfirmed) {
-          link("https://covid-19.ontario.ca/school-screening/");
-        }
-      }
-      text(P1[lang] + p2Class + inSchool[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohort == 'B' && period == 2 && cohort == 'A') {
-      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohort == 'A' && period == 1 && cohort == 'B') {
-      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohort == 'B' && period == 1 && cohort == 'B') {
-      if (!warningShown && alpha >= 255 && hour() <= 9) {
-        booster.showConfirmDialog(
-          "Don't forget to do your COVID Screening. Would you like to go there now?", 
-          "COVID Screening", 
-          new Runnable() {
-          public void run() {
-            isConfirmed = true;
-          }
-        }
-        , 
-          new Runnable() {
-          public void run() {
-            isConfirmed = false;
-          }
-        }
-        );        
-        warningShown = true;
-        if (isConfirmed) {
-          link("https://covid-19.ontario.ca/school-screening/");
-        }
-      }
-      text(P1[lang] + p1Class + inSchool[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohort == 'A' && period == 2 && cohort == 'B') {
-      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohort == 'B' && period == 2 && cohort == 'B') {
-      if (!warningShown && alpha >= 255  && hour() <= 9) {
-        booster.showConfirmDialog(
-          "Don't forget to do your COVID Screening. Would you like to go there now?", 
-          "COVID Screening", 
-          new Runnable() {
-          public void run() {
-            isConfirmed = true;
-          }
-        }
-        , 
-          new Runnable() {
-          public void run() {
-            isConfirmed = false;
-          }
-        }
-        );        
-        warningShown = true;
-        if (isConfirmed) {
-          link("https://covid-19.ontario.ca/school-screening/");
-        }
-      }
-      text(P1[lang] + p2Class + inSchool[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    } else   if (currentCohort == 'A' && period == 1 && cohort == 'C') {
-      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohort == 'B' && period == 1 && cohort == 'C') {
-      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohort == 'A' && period == 2 && cohort == 'C') { 
-      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohort == 'B' && period == 2 && cohort == 'C') {
-      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    }
+    text(P1[lang] + courses[getWeekNum()][0], width/2, height/2-105); //Drawing   times
+    text(P2[lang] +courses[getWeekNum()][1], width/2, height/2-52);
   }
   popMatrix();
 }
@@ -435,14 +295,14 @@ void drawTimes() {
 void firstTimeSetup() {
   background(backGroundColor[0], backGroundColor[1], backGroundColor[2]);
   fill(colors[0], colors[1], colors[2], alpha);
-  rect(0, height -  height*0.102986612, width, height, 20, 20, 0, 0); //These two are the two rectangles on the top and bottom
-  rect(0, 0, width, height*0.102986612, 0, 0, 20, 20);
+  rect(0, height -  height*0.102986612, width, height, roundAmount, roundAmount, 0, 0); //These two are the two rectangles on the top and bottom
+  rect(0, 0, width, height*0.102986612, 0, 0, roundAmount, roundAmount);
   textAlign(CENTER);
   fill(textColor[0], textColor[1], textColor[2], alpha);
   textFont(font, 50); //Setting Text Font
 
   text("TMTimeTable First Time Setup", width/2, height*0.0494444444 + 25); //Top Text
-  if (state != 3) {
+  if (state != 4) {
     if (alpha < 255) {
       alpha+=17;
     }
@@ -452,33 +312,30 @@ void firstTimeSetup() {
     textFont(font, 43); //Setting Text Font
     text("\"Where Timetables Evolve\"", width/2, sizeDetecH(185, height));
     textFont(font, 39); //Setting Text Font
-    text("To begin, please input your cohort:", width/2, sizeDetecH(235, height));
-
-    textFont(font, 150); //Setting Text Font
-    int yPos = int(sizeDetecH(410, height));
-    A.setPos(int(sizeDetecW(325, width)), yPos);
-    A.drawText();
-
-    B.setPos(int(sizeDetecW(625, width)), yPos);
-    B.drawText();
-
-    C.drawText();
-    C.setPos(int(sizeDetecW(925, width)), yPos);
+    text("To begin, please input your period 1 class:", width/2, sizeDetecH(235, height));
+    text(courses[0][0], width/2, height/2-80); //Drawing   times
   } else if (state == 1) {
     text("Welcome to TMTimeTable V4!", width/2, sizeDetecH(135, height));
     textFont(font, 43); //Setting Text Font
     text("\"Where Timetables Evolve\"", width/2, sizeDetecH(185, height));
     textFont(font, 39); //Setting Text Font
-    text("Awesome! Now type in your period 1 class", width/2, sizeDetecH(235, height));
-    text(p1Class, width/2, height/2-80); //Drawing   times
+    text("Awesome! Now type in your period 2 class", width/2, sizeDetecH(235, height));
+    text(courses[0][1], width/2, height/2-80); //Drawing   times
   } else if (state == 2) {
     text("Welcome to TMTimeTable V4!", width/2, sizeDetecH(135, height));
     textFont(font, 43); //Setting Text Font
     text("\"Where Timetables Evolve\"", width/2, sizeDetecH(185, height));
     textFont(font, 39); //Setting Text Font
-    text("Great! Now type in your period 2 class", width/2, sizeDetecH(235, height));
-    text(p2Class, width/2, height/2-80); //Drawing   times
+    text("Great! Now type in your period 3 class", width/2, sizeDetecH(235, height));
+    text(courses[1][0], width/2, height/2-80); //Drawing   times
   } else if (state == 3) {
+    text("Welcome to TMTimeTable V4!", width/2, sizeDetecH(135, height));
+    textFont(font, 43); //Setting Text Font
+    text("\"Where Timetables Evolve\"", width/2, sizeDetecH(185, height));
+    textFont(font, 39); //Setting Text Font
+    text("Last One! Now type in your period 4 class", width/2, sizeDetecH(235, height));
+    text(courses[1][1], width/2, height/2-80); //Drawing   times
+  } else if (state == 4) {
     alpha-= 15;
     if (alpha <= 0) {
       isSetUp = true;
@@ -486,64 +343,16 @@ void firstTimeSetup() {
     }
   }
 }
-void calculateClasses() {
-  if (dayOfWeek.equals("Monday")) {
-    currentCohort = 'A';
-    period = 1;
-  } else if (dayOfWeek.equals("Tuesday")) {
-    currentCohort = 'A';
-    period = 2;
-  } else if (dayOfWeek.equals("Thursday")) {
-    currentCohort = 'B';
-    period = 1;
-  } else if (dayOfWeek.equals("Friday")) {
-    currentCohort = 'B';
-    period = 2;
-  } else {
-    checkWed();
-  }
-}
-void checkWed() {
-  for (int i = 0; i < wedDates.length; i++) { //Until you find the entry with todays date continue the loop
-    String temp = wedDates[i];
-    if (temp.equals(monthString)) {
-      loadWed(i);
-      break;
-    }
-  }
-}
-
-void loadWed(int i) {
-  for (int j = i; j < wedDates.length; j++) { //Until you find the entry with todays date continue the loop
-    String temp = wedDates[j];
-    if (temp.equals(str(day()))) {
-      if (wedDates[j+1].equals("A1")) {
-        currentCohort = 'A';
-        period = 1;
-      } else if (wedDates[j+1].equals("B1")) {
-        currentCohort = 'B';
-        period = 1;
-      } else if (wedDates[j+1].equals("A2")) {
-        currentCohort = 'A';
-        period = 2;
-      } else if (wedDates[j+1].equals("B2")) {
-        currentCohort = 'B';
-        period = 2;
-      }
-      break;
-    }
-  }
-}
 
 void loadData() {
-  if (pref[0].equals("timeTableGenV4Save")) {
+  if (pref[0].equals("timeTableGenV4.1Save")) {
 
-    String[] temp = (split(pref[1], ':'));
-    cohort = temp[1].charAt(0);
-    p1Class = split(pref[2], ':')[1];
-    p2Class = split(pref[3], ':')[1];
-    Theme = split(pref[4], ':')[1];
-    cScheme = split(pref[5], ':')[1];
+    courses[0][0] = split(pref[1], ':')[1];
+    courses[0][1] = split(pref[2], ':')[1];
+    courses[1][0] = split(pref[3], ':')[1];
+    courses[1][1] = split(pref[4], ':')[1];
+    Theme = split(pref[5], ':')[1];
+    cScheme = split(pref[6], ':')[1];
     view = int(split(pref[7], ':')[1]);
     if (Theme.equals("Dark")) {
       backGroundColor[0] = 0;
@@ -663,44 +472,23 @@ void loadData() {
         colors[2] = 145;
       }
     }
-    try {
-      transSpeed = float(split(pref[6], ':')[1]);
-    }
-    catch (Exception e) {
-      booster.showInfoDialog("Your save file has been updated to be compliant with TMTimeTable V" + ver);
-      writeData(forceCohortC);
-    }
   } else {
     throw null;
   }
 }
 
-void writeData(boolean switchCohort) {
-  if (switchCohort) {
-    output = createWriter(System.getProperty("user.home")+"\\TMTimeTable\\pref.txt");
-    output.println("timeTableGenV4Save");
-    output.println("Cohort:" + backupCohort);
-    output.println("P1:" + p1Class);
-    output.println("P2:" + p2Class);
-    output.println("Theme:" + Theme);
-    output.println("Color Scheme:" + cScheme);
-    output.println("Animation Speed:" + transSpeed);
-    output.println("View:" + view);
+void writeData() {
+  output = createWriter(System.getProperty("user.home")+"\\TMTimeTable\\pref.txt");
+  output.println("timeTableGenV4.1Save");
+  output.println("P1:" + courses[0][0]);
+  output.println("P2:" + courses[0][1]);
+  output.println("P3:" + courses[1][0]);
+  output.println("P4:" + courses[1][1]);
+  output.println("Theme:" + Theme);
+  output.println("Color Scheme:" + cScheme);
+  output.println("View:" + view);
 
-    output.flush();
-  } else {
-    output = createWriter(System.getProperty("user.home")+"\\TMTimeTable\\pref.txt");
-    output.println("timeTableGenV4Save");
-    output.println("Cohort:" + cohort);
-    output.println("P1:" + p1Class);
-    output.println("P2:" + p2Class);
-    output.println("Theme:" + Theme);
-    output.println("Color Scheme:" + cScheme);
-    output.println("Animation Speed:" + transSpeed);
-    output.println("View:" + view);
-
-    output.flush();
-  }
+  output.flush();
 }
 
 boolean noSchool() {
@@ -717,10 +505,31 @@ boolean noSchool() {
 boolean paDay() {
   int[] months = {2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5};
   int[] days = {15, 2, 5, 12, 13, 14, 15, 16, 26, 27, 24};
-  for (int i = 0; i < days.length; i++) { 
+  for (int i = 0; i < days.length; i++) {
     if (day() == days[i] && month() == months[i]) {
       return true;
     }
   }
   return false;
+}
+
+int getWeekNum() {
+  DateTime firstDay = new DateTime(2021, 9, 9, 12, 0);
+  DateTime now = new DateTime();
+  Weeks weeks = Weeks.weeksBetween(firstDay, now);
+  return weeks.getWeeks() % 2;
+}
+
+int getWeekNum(int month, int day) {
+  DateTime firstDay = new DateTime(2021, 9, 5, 12, 0);
+  DateTime now = new DateTime(2021, month, day, 12, 0);
+  Weeks weeks = Weeks.weeksBetween(firstDay, now);
+  return weeks.getWeeks() % 2;
+}
+
+int getWeekNum(int month, int day, int year) {
+  DateTime firstDay = new DateTime(2021, 9, 5, 12, 0);
+  DateTime now = new DateTime(year, month, day, 12, 0);
+  Weeks weeks = Weeks.weeksBetween(firstDay, now);
+  return weeks.getWeeks() % 2;
 }

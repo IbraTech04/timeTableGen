@@ -4,18 +4,6 @@ int[] newText = new int[3];
 int ishift = 0;
 void mousePressed() { 
   if (!isSetUp) {
-    if (state == 0) {
-      if (A.isPressed()) {
-        state++;
-        cohort = 'A';
-      } else if (B.isPressed()) {
-        state++;
-        cohort = 'B';
-      } else if (C.isPressed()) {
-        state++;
-        cohort = 'C';
-      }
-    }
   } else {
     if (screenNumber == 1) {
       if (settings.get(0).isPressed()) {
@@ -113,8 +101,7 @@ void mousePressed() {
             newColors[2] = 145;
           }
         }
-        writeData(forceCohortC); 
-        ;
+        writeData();
       } else if (settings.get(1).isPressed()) {
         verCounter = 0;
         if (!customTheme && !Theme.equals("Really Dark") && !Theme.equals("Really Light")) {
@@ -150,52 +137,44 @@ void mousePressed() {
             newColors[2] = 245;
           }
         }
-        writeData(forceCohortC); 
+        writeData(); 
         ;
       } else if (settings.get(2).isPressed()) {
         verCounter = 0;
-        String backup = p1Class;
-        p1Class = booster.showTextInputDialog("What would you like to change P1 to?");
-        if (p1Class == null) {
-          p1Class = backup;
+        String backup = courses[0][0];
+        courses[0][0] = booster.showTextInputDialog("What would you like to change P1 to?");
+        if (courses[0][0] == null) {
+          courses[0][0] = backup;
         }
-        writeData(forceCohortC); 
-        ;
+        writeData(); 
         initWeekView();
       } else if (settings.get(3).isPressed()) {
         verCounter = 0;
-        String backup = p2Class;
-        p2Class = booster.showTextInputDialog("What would you like to change P2 to?");
-        if (p2Class == null) {
-          p2Class = backup;
+        String backup = courses[0][1];
+        courses[0][1] = booster.showTextInputDialog("What would you like to change P2 to?");
+        if (courses[0][1] == null) {
+          courses[0][1] = backup;
         }
-        writeData(forceCohortC); 
-        ;
+        writeData(); 
         initWeekView();
       } else if (settings.get(4).isPressed()) {
-        if (!forceCohortC) {
-          verCounter = 0;
-          if (cohort == 'A') {
-            cohort = 'B';
-          } else if (cohort == 'B') {
-            cohort = 'C';
-          } else {
-            cohort = 'A';
-          }
-          writeData(forceCohortC); 
-          initWeekView();
+        verCounter = 0;
+        String backup = courses[1][0];
+        courses[1][0] = booster.showTextInputDialog("What would you like to change P3 to?");
+        if (courses[1][0] == null) {
+          courses[1][0] = backup;
         }
+        writeData(); 
+        initWeekView();
       } else if (settings.get(5).isPressed()) {
         verCounter = 0;
-        if (transSpeed == 1) {
-          transSpeed = 2.5;
-        } else if (transSpeed == 2.5) {
-          transSpeed = 3;
-        } else {
-          transSpeed = 1;
+        String backup = courses[1][1];
+        courses[1][1] = booster.showTextInputDialog("What would you like to change P4 to?");
+        if (courses[1][1] == null) {
+          courses[1][1] = backup;
         }
-        writeData(forceCohortC); 
-        ;
+        writeData(); 
+        initWeekView();
       } else {
         verCounter ++;
       }
@@ -206,6 +185,7 @@ void mousePressed() {
       } else {
         guiTrans = -50;
         screenNumber = 0;
+        guiState = 0;
       }
     } else if (mouseY >= height -  height*0.102986612 && mouseX >=width - height*0.102986612) {
       if (screenNumber == 0 || screenNumber == 3) {
@@ -226,7 +206,7 @@ void mousePressed() {
         } else {
           view = 0;
         }
-        writeData(forceCohortC);
+        writeData();
       }
     }
   }
@@ -289,5 +269,13 @@ void colorShiftImg(int r) {
     picCol-=transSpeed;
   } else if (picCol < r) {
     picCol+=transSpeed;
+  }
+}
+
+void roundShift(int r) {
+  if (roundAmount > r) {
+    roundAmount-=2;
+  } else if (roundAmount < r) {
+    roundAmount+=2;
   }
 }

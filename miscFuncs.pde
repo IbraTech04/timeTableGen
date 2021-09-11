@@ -37,8 +37,10 @@ void reset() {
   backGroundColor[1] = 0;
   backGroundColor[2] = 0;
   state = 0;
-  p1Class = "";
-  p2Class = "";
+  courses[0][0] = "";
+  courses[0][1] = "";
+  courses[1][0] = "";
+  courses[1][1] = "";
   alpha = 0;
   screenNumber = 0;
   picCol = 0;

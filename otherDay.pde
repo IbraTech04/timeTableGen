@@ -1,39 +1,32 @@
 int periodOther, dayOfMonth; //<>//
-char currentCohortOther;
 boolean noSchoolOther;
 String otherCalDate;
+int weekNumOther;
+
 void parseDate(String lineIn) {
   if (view == 0) {
     try {
       lineIn = lineIn.toUpperCase();
       if (lineIn.equals("TOMORROW")) {
         Calendar c = Calendar.getInstance();
-        Calendar today = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, day()+1);
-        int ID = c.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR);
         dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
         String dayOfWeek = testWeek[0][c.get(Calendar.DAY_OF_WEEK)];
         String month = testMonth[0][c.get(Calendar.MONTH)+1];
         otherCalDate = dayOfWeek + " " + month + " " + c.get(Calendar.DAY_OF_MONTH) + " 2021";
-
-        getDataFromWeekView(ID);
+        weekNumOther = getWeekNum(c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
       } else if (lineIn.equals("TODAY")) {
         screenNumber = 0;
-      } else if (lineIn.equals("WEDNESDAY") || lineIn.equals("WED")) {
-        int ID = preCheckWed(false);
-        getDataFromWeekView(ID);
-      } else if (lineIn.equals("NEXT WEDNESDAY") || lineIn.equals("NEXT WED")) {
-        int ID = preCheckWed(true);
-        getDataFromWeekView(ID);
       } else {
-        Calendar today = Calendar.getInstance();
         String[] split = split(lineIn, '/');
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, int(split[1]));
         c.set(Calendar.MONTH, int(split[0]) - 1);
-
+        /*
         int ID = c.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR);
         getDataFromWeekView(ID);
+*/
+        weekNumOther = getWeekNum(c.get(Calendar.MONTH) + 1, c.get(Calendar.DAY_OF_MONTH));
 
         dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
         String dayOfWeek = week[c.get(Calendar.DAY_OF_WEEK)];
@@ -57,46 +50,11 @@ void parseDate(String lineIn) {
 void drawTimesOther() {
   pushMatrix();
   translate(0, 50);
-  if (noSchoolOther) {
+  if (noSchool()) {
     text("No School today. Reason: " + reason, width/2, height/2-105); //Drawing   times
   } else {
-    if (currentCohortOther == 'A' && periodOther == 1 && cohort == 'A') {
-      text(P1[lang] + p1Class + inSchool[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohortOther == 'B' && periodOther == 1 && cohort == 'A') {
-      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohortOther == 'A' && periodOther == 2 && cohort == 'A') {
-      text(P1[lang] + p2Class + inSchool[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohortOther == 'B' && periodOther == 2 && cohort == 'A') {
-      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohortOther == 'A' && periodOther == 1 && cohort == 'B') {
-      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohortOther == 'B' && periodOther == 1 && cohort == 'B') {
-      text(P1[lang] + p1Class + inSchool[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohortOther == 'A' && periodOther == 2 && cohort == 'B') {
-      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohortOther == 'B' && periodOther == 2 && cohort == 'B') {
-      text(P1[lang] + p2Class + inSchool[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    } else   if (currentCohortOther == 'A' && periodOther == 1 && cohort == 'C') {
-      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohortOther == 'B' && periodOther == 1 && cohort == 'C') {
-      text(P1[lang] + p1Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p2Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohortOther == 'A' && periodOther == 2 && cohort == 'C') {
-      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    } else if (currentCohortOther == 'B' && periodOther == 2 && cohort == 'C') {
-      text(P1[lang] + p2Class + atHome[lang], width/2, height/2-105); //Drawing   times
-      text(P2[lang] + p1Class + atHome[lang], width/2, height/2-52);
-    }
+    text(P1[lang] + courses[weekNumOther][0], width/2, height/2-105); //Drawing   times
+    text(P2[lang] +courses[weekNumOther][1], width/2, height/2-52);
   }
   popMatrix();
 }
@@ -145,26 +103,4 @@ int preCheckWed(boolean next) {
   String dayOfWeek = week[wed.get(Calendar.DAY_OF_WEEK)];
   otherCalDate = dayOfWeek + " " + month + " " + dayOfMonth + " 2021";
   return changeFactor;
-}
-
-void getDataFromWeekView(int ID) {
-  if (rects.get(ID).getInd().equals("A1")) {
-    noSchoolOther = false;
-    currentCohortOther = 'A';
-    periodOther = 1;
-  } else if (rects.get(ID).getInd().equals("A2")) {
-    noSchoolOther = false;
-    currentCohortOther = 'A';
-    periodOther = 2;
-  } else if (rects.get(ID).getInd().equals("B1")) {
-    noSchoolOther = false;
-    currentCohortOther = 'B';
-    periodOther = 1;
-  } else if (rects.get(ID).getInd().equals("B2")) {
-    noSchoolOther = false;
-    currentCohortOther = 'B';
-    periodOther = 2;
-  } else {
-    noSchoolOther = true;
-  }
 }

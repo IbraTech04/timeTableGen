@@ -60,6 +60,7 @@ public class ClickableText {
 
 class WeekRect {
   int id;
+  int weekNum;
   String day;
   String dayPt2;
   String P1Class;
@@ -67,88 +68,45 @@ class WeekRect {
   boolean noSchool;
   String indent;
   Calendar cal = Calendar.getInstance();
-  public WeekRect(String[] args, int newID, int dayOfYear) {
-    day = args[0];
-    dayPt2 = args[1];
+  public WeekRect(int newID, int dayOfYear) {
     cal.set(Calendar.DAY_OF_YEAR, dayOfYear);
-    if (args[2].equals("true")) {
+    weekNum = getWeekNum(cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.YEAR));
+
+    if (week[cal.get(Calendar.DAY_OF_WEEK)].equals("Sunday") || week[cal.get(Calendar.DAY_OF_WEEK)].equals("Saturday")) {
       noSchool = true;
-      actualDaysLeft--;
-    } else {
-      noSchool = false;
     }
-    indent = args[3];
-    if (cohort == 'A') {
-      if (args[3].equals("A1")) {
-        P1Class = p1Class + inSchool[lang];
-        P2Class = p2Class + atHome[lang];
-      } else if (args[3].equals("A2")) {
-        P1Class = p2Class + inSchool[lang];
-        P2Class = p1Class + atHome[lang];
-      } else if (args[3].equals("B1")) {
-        P1Class = p1Class + atHome[lang];
-        P2Class = p2Class + atHome[lang];
-      } else if (args[3].equals("B2")) {
-        P1Class = p2Class + atHome[lang];
-        P2Class = p1Class + atHome[lang];
-      }
-    } else if (cohort == 'B') {
-      if (args[3].equals("A1")) {
-        P1Class = p1Class + atHome[lang];
-        P2Class = p2Class + atHome[lang];
-      } else if (args[3].equals("A2")) {
-        P1Class = p2Class + atHome[lang];
-        P2Class = p1Class + atHome[lang];
-      } else if (args[3].equals("B1")) {
-        P1Class = p1Class + inSchool[lang];
-        P2Class = p2Class + atHome[lang];
-      } else if (args[3].equals("B2")) {
-        P1Class = p2Class + inSchool[lang];
-        P2Class = p1Class + atHome[lang];
-      }
-    } else {
-      if (args[3].equals("A1")) {
-        P1Class = p1Class + atHome[lang];
-        P2Class = p2Class + atHome[lang];
-      } else if (args[3].equals("A2")) {
-        P1Class = p2Class + atHome[lang];
-        P2Class = p1Class + atHome[lang];
-      } else if (args[3].equals("B1")) {
-        P1Class = p1Class + atHome[lang];
-        P2Class = p2Class + atHome[lang];
-      } else if (args[3].equals("B2")) {
-        P1Class = p2Class + atHome[lang];
-        P2Class = p1Class + atHome[lang];
-      }
-    }
+
+    day = week[cal.get(Calendar.DAY_OF_WEEK)];
+    dayPt2 = months[cal.get(Calendar.MONTH) + 1] + " " + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.get(Calendar.YEAR);
+
     id = newID;
   }
 
   public void drawRect() {
     if (noSchool) {
       fill(colors[0], colors[1], colors[2], alpha);
-      rect(10, 10, width-20, 90, 15, 15, 15, 15);
+      rect(10, 10, width-20, 90, roundAmount, roundAmount, roundAmount, roundAmount);
       fill(textColor[0], textColor[1], textColor[2], alpha);
       textAlign(LEFT);
       textSize(25);
       text(day + "\n" + dayPt2, 20, 45);
       textSize(35);
-      text("No School", 240, 65);
+      text("No School", 260, 65);
     } else {
       fill(colors[0], colors[1], colors[2], alpha);
-      rect(10, 10, width-20, 90, 15, 15, 15, 15);
+      rect(10, 10, width-20, 90, roundAmount, roundAmount, roundAmount, roundAmount);
       fill(textColor[0], textColor[1], textColor[2], alpha);
       textAlign(LEFT);
       textFont(font, 25); //Setting Text Font
       text(day + "\n" + dayPt2, 20, 45);
       textFont(font, 30); //Setting Text Font
-      text(P1[lang] + P1Class, 240, 45);
-      text(P2[lang] + P2Class, 240, 85);
+      text(P1[lang] + courses[weekNum][0], 260, 45);
+      text(P2[lang] + courses[weekNum][1], 260, 85);
     }
     if (mousePressed && mouseX >= 10 && mouseX <= width-20 && mouseY >= ((id*100) + (height*0.145833333)) + transScale && mouseY <= ((id*100) + (height*0.145833333) +transScale) + 90 && !noSchool) {
       if (mouseY < height -  height*0.102986612) {
-        event = cal;
-        screenNumber = 4;
+        /*event = cal;
+         screenNumber = 4;*/
       }
     }
   }
@@ -160,11 +118,11 @@ class WeekRect {
     return P2Class;
   }
 
-  public String getInd() {
+  public int getInd() {
     if (noSchool) {
-      return "NS";
+      return -1;
     } else {
-      return indent;
+      return (weekNum);
     }
   }
 }
@@ -254,5 +212,59 @@ public void saveEvents() {
   EventSaver.close();
 }
 
-class Theme {
+class UpdaterThread extends Thread {
+  public void run()
+  {
+    try {
+      checkForUpdates();
+    }
+    catch (Exception e) {
+    }
+  }
+}
+
+class ImgLoader extends Thread {
+  public void run()
+  {
+    for (int i = 0; i < 75; i++) {
+      String imageName = "image" + nf(i, 3) + ".png";
+      loadingAnimation[i] = loadImage(imageName);
+    }
+  }
+}
+
+class UpdateDownloader extends Thread {
+  public void run()
+  {
+    try {
+      File file;
+      Desktop desktop = Desktop.getDesktop();
+      File theDir = new File(System.getProperty("user.home") + "\\TMTimeTable");
+      if (!theDir.exists()) {
+        theDir.mkdirs();
+      }
+      if (System.getProperty("sun.desktop").equals("windows")) {
+        if (System.getProperty("os.arch").equals("amd64")) {
+          byte[] test = loadBytes("https://github.com/IbraTech04/updateServer/raw/master/timetable64.exe");
+          saveBytes(System.getProperty("user.home")+"\\TMTimeTable\\TMTimeTableV" + nversionFromServer[0] + ".exe", test);
+        } else {
+          byte[] test = loadBytes("https://github.com/IbraTech04/updateServer/raw/master/timetable32.exe");
+          saveBytes(System.getProperty("user.home")+"\\TMTimeTable\\TMTimeTableV" + nversionFromServer[0] + ".exe", test);
+        }
+      } else {
+        link("https://github.com/IbraTech04/timeTableGen/releases");
+      }
+
+      if (!Desktop.isDesktopSupported()) {
+        return;
+      }
+      file = new File(System.getProperty("user.home")+"\\TMTimeTable\\TMTimeTableV" + nversionFromServer[0] + ".exe");
+      if (file.exists()) {
+        desktop.open(file);
+        exit();
+      }
+    }
+    catch (Exception e) {
+    }
+  }
 }

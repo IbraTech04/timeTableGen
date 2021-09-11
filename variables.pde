@@ -2,6 +2,9 @@ PFont font;
 PImage homep, settingsp, calendar, weekV;
 PrintWriter output;
 
+int weekNumber;
+String[][] courses = {{"",""},{"",""}};
+
 float[] colors = {60, 135, 245, 128, 0, 0, 92, 153, 107}, textColor = {255, 255, 255}, backGroundColor = {0, 0, 0};
 int date = cal.get(Calendar.DAY_OF_WEEK), period, state = 0, picCol = 255, colToBe = 255;
 String[] nversionFromServer;
@@ -19,18 +22,17 @@ String[] months = englishMonths;
 String dayOfWeek, p1Class = "", p2Class = "", monthString, Theme = "", cScheme = "";
 
 String calDate, reason = "Weekend";
-String[] wedDates, pref;
+String[] pref;
 String otherDay;
 float transSpeed = 2.5;
-char cohort, currentCohort, backupCohort;
 
 boolean isSetUp = true, customTheme, checkOtherDay = false, reset = false, warningShown = false, showVer = false, updateMode = false, updateMode2 = false;
 float alpha = 0;
 
-String ver = "4";
+String ver = "4.1";
 int verCounter = 0;
 
-int guiState = 0, updateState = 0;
+int guiState = 0, updateState = 0, settingsTrans;
 
 
 String[] titleText = {"TMTimeTable Home", "برنامج الجدول الزمني"};
@@ -48,10 +50,12 @@ String[] P2 = {"P2: ", "الحصة ٢ "};
 
 String[] resetString = {"Press F to perform a factory reset", "اضغط F لإعادة التعيين"};
 
-int daysLeft = 100;
+int daysLeft = 100, roundAmount = 20, newRoundAmount = 20;
+
+boolean roundedUI = true;
 
 float transScale;
 
 String[] reg;
 
-boolean forceCohortC = false;
+PImage[] loadingAnimation = new PImage[75];
