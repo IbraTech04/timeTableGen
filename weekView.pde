@@ -81,32 +81,21 @@ void initWeekView() {
   viewWeek.set(Calendar.MONTH, 5);
   viewWeek.set(Calendar.DAY_OF_MONTH, 29);
   viewWeek.set(Calendar.YEAR, 2022);
-    int toAdd = 365;
-  if (cal.get(Calendar.YEAR) == 2022){
-     toAdd = 0;
+  int toAdd = 365;
+  if (cal.get(Calendar.YEAR) == 2022) {
+    toAdd = 0;
   }
   daysLeft = ((viewWeek.get(Calendar.DAY_OF_YEAR) + toAdd) - cal.get(Calendar.DAY_OF_YEAR)) + 1;
 
   for (int i = cal.get(Calendar.DAY_OF_YEAR); i <= viewWeek.get(Calendar.DAY_OF_YEAR) + toAdd; i++) {
     Calendar temp = Calendar.getInstance();
     int integer = i;
-    if (i > 365){
-       integer -= 365;
-       temp.set(Calendar.YEAR, 2022);
+    if (i > 365) {
+      integer -= 365;
+      temp.set(Calendar.YEAR, 2022);
     }
     temp.set(Calendar.DAY_OF_YEAR, integer);
     rects.add(new WeekRect(i - cal.get(Calendar.DAY_OF_YEAR), i));
-  }
-}
-boolean noSchoolWeek(String weekDay, int day, int month) {
-  if (weekDay == "Saturday" || weekDay == "Sunday") {
-    reason = "Weekend";
-    return true;
-  } else if (paDayOther(day, month)) {
-    reason = "PA Day";
-    return true;
-  } else {
-    return false;
   }
 }
 

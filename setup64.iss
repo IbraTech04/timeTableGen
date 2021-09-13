@@ -36,8 +36,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\Code\Processing\timeTableGenV2\application.windows64\timeTableGenV2.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Code\Processing\timeTableGenV2\application.windows64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\Code\Processing\timeTableGenV2\application.windows\timeTableGenV2.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Code\Processing\timeTableGenV2\application.windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

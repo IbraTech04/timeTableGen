@@ -1,7 +1,7 @@
 void keyPressed() {
   if (!isSetUp) {
     if (state == 0) {
-      if (key != ENTER && key != CODED && key != '`' && key != BACKSPACE && key != 22 && keyCode!=86) {
+      if (key != ENTER && key != CODED && key != '`' && key != BACKSPACE && key != 22  && keyCode!=86) {
         courses[0][0] +=key;
       } else  if (key == BACKSPACE) {
         courses[0][0] = courses[0][0].substring(0, max(0, courses[0][0].length() - 1));

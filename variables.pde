@@ -21,7 +21,7 @@ String[] week = englishWeek;
 String[] months = englishMonths;
 String dayOfWeek, p1Class = "", p2Class = "", monthString, Theme = "", cScheme = "";
 
-String calDate, reason = "Weekend";
+String calDate;
 String[] pref;
 String otherDay;
 float transSpeed = 2.5;
@@ -29,7 +29,7 @@ float transSpeed = 2.5;
 boolean isSetUp = true, customTheme, checkOtherDay = false, reset = false, warningShown = false, showVer = false, updateMode = false, updateMode2 = false;
 float alpha = 0;
 
-String ver = "4.1";
+String ver = "4.2";
 int verCounter = 0;
 
 int guiState = 0, updateState = 0, settingsTrans;
