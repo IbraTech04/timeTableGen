@@ -74,8 +74,12 @@ class WeekRect {
 
     if (week[cal.get(Calendar.DAY_OF_WEEK)].equals("Sunday") || week[cal.get(Calendar.DAY_OF_WEEK)].equals("Saturday")) {
       noSchool = true;
+      actualDaysLeft--;
+      
     } else if (paDay(cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.YEAR))) {
       noSchool = true;
+            actualDaysLeft--;
+
     }
 
     day = week[cal.get(Calendar.DAY_OF_WEEK)];

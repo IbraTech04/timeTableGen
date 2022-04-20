@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TMTimeTable"
-#define MyAppVersion "4"
+#define MyAppVersion "4.2"
 #define MyAppPublisher "Ibrahim Chehab"
 #define MyAppURL "https://github.com/IbraTech04"
 #define MyAppExeName "timeTableGenV2.exe"
@@ -15,7 +15,7 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-AppPublisherURL={#MyAppURL}
+AppPublisherURL={#MyAppURL}                                                  
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
@@ -36,8 +36,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\Code\Processing\timeTableGenV2\application.windows\timeTableGenV2.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\Code\Processing\timeTableGenV2\application.windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\Code\Processing\timeTableGenV2\application.windows64\timeTableGenV2.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\Code\Processing\timeTableGenV2\application.windows64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

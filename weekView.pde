@@ -86,7 +86,7 @@ void initWeekView() {
     toAdd = 0;
   }
   daysLeft = ((viewWeek.get(Calendar.DAY_OF_YEAR) + toAdd) - cal.get(Calendar.DAY_OF_YEAR)) + 1;
-
+  actualDaysLeft = daysLeft;
   for (int i = cal.get(Calendar.DAY_OF_YEAR); i <= viewWeek.get(Calendar.DAY_OF_YEAR) + toAdd; i++) {
     Calendar temp = Calendar.getInstance();
     int integer = i;
@@ -97,6 +97,10 @@ void initWeekView() {
     temp.set(Calendar.DAY_OF_YEAR, integer);
     rects.add(new WeekRect(i - cal.get(Calendar.DAY_OF_YEAR), i));
   }
+  
+  println("Days Left: " + actualDaysLeft);
+    println("Days Left With Weekends + Days Off: " + daysLeft);
+
 }
 
 double getMaxVal() {

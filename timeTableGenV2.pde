@@ -15,7 +15,6 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import java.time.*;
-
 int col;
 boolean isConfirmed;
 
@@ -284,10 +283,10 @@ void drawTimes() {
   pushMatrix();
   translate(0, 50);
   if (noSchool()) {
-    text("No School today" , width/2, height/2-105); //Drawing   times
+    text("No School today", width/2, height/2-105); //Drawing   times
   } else {
-    text(P1[lang] + courses[getWeekNum()][0], width/2, height/2-105); //Drawing   times
-    text(P2[lang] +courses[getWeekNum()][1], width/2, height/2-52);
+    text(P1[lang] + courses[0][0], width/2, height/2-105); //Drawing   times
+    text(P2[lang] + courses[1][1], width/2, height/2-52);
   }
   popMatrix();
 }
@@ -513,10 +512,8 @@ boolean paDay(int month, int day, int year) {
 }
 
 int getWeekNum() {
-  DateTime firstDay = new DateTime(2021, 9, 5, 12, 0);
-  DateTime now = new DateTime();
-  Weeks weeks = Weeks.weeksBetween(firstDay, now);
-  return weeks.getWeeks() % 2;
+  Calendar cal = Calendar.getInstance();
+  return cal.get(Calendar.DAY_OF_MONTH) % 2;
 }
 
 int getWeekNum(int month, int day) {
